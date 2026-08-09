@@ -1,7 +1,5 @@
-# paracuda-ng.github.io
-
 The PARACUDA-NG website and documentation, published at
-<https://paracuda-ng.github.io/>.
+[https://paracuda-ng.github.io/](https://paracuda-ng.github.io/).
 
 This is an organization GitHub Pages repository, so the site is served from the
 repository root. It is a static site with no build step: three files plus three
@@ -20,11 +18,11 @@ assets/
 
 It documents all three PARACUDA-NG builds, each of which lives elsewhere:
 
-| Build | Where the code lives |
-| --- | --- |
-| Desktop application, main code base | <https://github.com/sharadgupta27/paracuda-ng> |
-| QGIS plugin | <https://github.com/sharadgupta27/paracuda-qgis> |
-| Python package | Published to PyPI and conda-forge as `paracuda-ng`; it has no repository of its own and lists `paracuda-ng` as its project link |
+| Build                               | Where the code lives                                                                                                               |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Desktop application, main code base | [https://github.com/sharadgupta27/paracuda-ng](https://github.com/sharadgupta27/paracuda-ng)                                        |
+| QGIS plugin                         | [https://github.com/sharadgupta27/paracuda-qgis](https://github.com/sharadgupta27/paracuda-qgis)                                    |
+| Python package                      | Published to PyPI and conda-forge as`paracuda-ng`; it has no repository of its own and lists `paracuda-ng` as its project link |
 
 ## Publish
 
@@ -35,7 +33,7 @@ It documents all three PARACUDA-NG builds, each of which lives elsewhere:
 3. **Settings > Pages > Build and deployment > Deploy from a branch**, branch
    `main`, folder `/ (root)`.
 
-The site is live at <https://paracuda-ng.github.io/> a minute or two later. No
+The site is live at [https://paracuda-ng.github.io/](https://paracuda-ng.github.io/) a minute or two later. No
 other repository needs Pages enabled.
 
 ## Preview locally
