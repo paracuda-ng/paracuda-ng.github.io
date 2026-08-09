@@ -1,0 +1,1655 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PARACUDA-NG - Spectral machine learning for spectroscopy and imaging spectroscopy</title>
+<meta name="description" content="PARACUDA-NG (PARAmetric CUbe Data Analysis - Next Generation) is a free and open-source toolkit that loads spectral data, builds and validates regression models, and applies them to multispectral and hyperspectral image cubes. Available as a desktop application, a Python package and a QGIS plugin.">
+<meta name="author" content="Sharad Kumar Gupta">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="assets/paracuda-icon.png">
+<link rel="apple-touch-icon" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,600,700%7CJetBrains+Mono:400,400i,700&amp;display=swap">
+<link rel="stylesheet" href="assets/styles.css">
+<meta property="og:title" content="PARACUDA-NG">
+<meta property="og:description" content="Free and open-source spectral machine learning: build, validate and apply regression models for spectroscopy and imaging spectroscopy. Desktop app, Python package and QGIS plugin.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/screenshot_paracuda.png">
+<meta name="theme-color" content="#009485">
+</head>
+
+<body data-md-color-scheme="default" data-drawer="closed">
+
+<a class="skip" href="#what-it-does">Skip to content</a>
+
+<header class="md-header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <button class="md-header__button md-header__button--drawer" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </button>
+
+    <a class="md-header__button md-logo" href="#top" aria-label="PARACUDA-NG">
+      <!-- Inline so it stays crisp and keeps its aspect ratio at any size. -->
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <linearGradient id="pcTile" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#00b8a2"/><stop offset="1" stop-color="#00695f"/>
+          </linearGradient>
+          <clipPath id="pcFront"><path d="M18 30 H40 V50 H18 Z"/></clipPath>
+        </defs>
+        <rect width="64" height="64" rx="15" fill="url(#pcTile)"/>
+        <path d="M18 30 L28 20 H33.5 L23.5 30 Z" fill="#a78bfa"/>
+        <path d="M23.5 30 L33.5 20 H39 L29 30 Z" fill="#38bdf8"/>
+        <path d="M29 30 L39 20 H44.5 L34.5 30 Z" fill="#4ade80"/>
+        <path d="M34.5 30 L44.5 20 H50 L40 30 Z" fill="#fbbf24"/>
+        <path d="M40 30 L50 20 V40 L40 50 Z" fill="#04120f" fill-opacity=".22"/>
+        <path d="M18 30 H40 V50 H18 Z" fill="#ffffff" fill-opacity=".12"/>
+        <g clip-path="url(#pcFront)">
+          <path d="M18 46.5 C22 45 23.5 37.5 27 37.5 C29.6 37.5 29.8 44.5 32 44.5 C34.6 44.5 35.5 35.5 40 33.5"
+                fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <path d="M18 30 L28 20 H50 L40 30 Z M18 30 H40 V50 H18 Z M40 30 L50 20 V40 L40 50"
+              fill="none" stroke="#ffffff" stroke-opacity=".92" stroke-width="2.2" stroke-linejoin="round"/>
+      </svg>
+    </a>
+
+    <div class="md-header__title">
+      PARACUDA-NG
+      <small>PARAmetric CUbe Data Analysis - Next Generation</small>
+    </div>
+
+    <button class="md-header__button" data-scheme-to="slate" title="Switch to dark mode" aria-label="Switch to dark mode">
+      <svg viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+    </button>
+    <button class="md-header__button" data-scheme-to="default" title="Switch to light mode" aria-label="Switch to light mode" hidden>
+      <svg viewBox="0 0 24 24"><path d="M17.75 4.09l-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3 3.19.09m3.5 6.91l-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95 2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 22.5 8.84 22.5 4.94 18.6c-3.9-3.9-3.9-10.23 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.03a9.98 9.98 0 0 0 8.02 2.89m-1.64 2.02a12.1 12.1 0 0 1-7.8-3.47c-2.17-2.17-3.35-4.97-3.47-7.8-2.28 2.75-2.14 6.85.41 9.4 2.55 2.55 6.66 2.7 9.4.41l1.46 1.46Z"/></svg>
+    </button>
+
+    <div class="md-search">
+      <label class="md-search__form">
+        <svg viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <input class="md-search__input" type="search" placeholder="Search the docs" aria-label="Search the documentation" autocomplete="off">
+      </label>
+      <div class="md-search__results" data-open="false" role="listbox" aria-label="Search results"></div>
+    </div>
+
+    <a class="md-source" href="https://github.com/sharadgupta27/paracuda-ng" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.03A9.58 9.58 0 0 1 12 6.8c.85 0 1.71.11 2.51.33 1.91-1.3 2.75-1.03 2.75-1.03.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85V21c0 .27.16.59.67.5A10 10 0 0 0 22 12 10 10 0 0 0 12 2Z"/></svg>
+      <span><strong>sharadgupta27/paracuda-ng</strong><em>MIT licensed</em></span>
+    </a>
+  </nav>
+</header>
+
+<div class="md-overlay"></div>
+
+<main class="md-main" id="top">
+  <div class="md-main__inner md-grid">
+
+    <!-- ============================ primary navigation ==================== -->
+    <aside class="md-sidebar md-sidebar--primary">
+      <nav class="md-nav md-nav--primary" aria-label="Site navigation">
+        <div class="md-nav__title">PARACUDA-NG</div>
+        <ul class="md-nav__list">
+          <li><a class="md-nav__link" href="#top">Home</a></li>
+          <li><a class="md-nav__link" href="#what-it-does">What it does today</a></li>
+          <li><a class="md-nav__link" href="#three-ways">Three ways to run it</a></li>
+          <li><a class="md-nav__link" href="#getting-started">Getting started</a></li>
+          <li><a class="md-nav__link" href="#input-data">Input data layout</a></li>
+
+          <li class="md-nav__section">User guide</li>
+          <li><a class="md-nav__link" href="#workflow">The seven-step workflow</a></li>
+          <li><a class="md-nav__link" href="#step-data">1. Data</a></li>
+          <li><a class="md-nav__link" href="#step-configuration">2. Configuration</a></li>
+          <li><a class="md-nav__link" href="#step-preprocess">3. Preprocess</a></li>
+          <li><a class="md-nav__link" href="#step-model">4. Model</a></li>
+          <li><a class="md-nav__link" href="#step-validate">5. Validate</a></li>
+          <li><a class="md-nav__link" href="#step-execution">6. Execution</a></li>
+          <li><a class="md-nav__link" href="#step-apply">7. Apply</a></li>
+          <li><a class="md-nav__link" href="#data-converter">Data Converter</a></li>
+          <li><a class="md-nav__link" href="#extra-tools">Extra tools</a></li>
+
+          <li class="md-nav__section">Distributions</li>
+          <li><a class="md-nav__link" href="#python-package">Python package</a></li>
+          <li><a class="md-nav__link" href="#python-scripting">Python scripting recipes</a></li>
+          <li><a class="md-nav__link" href="#qgis-plugin">QGIS plugin</a></li>
+          <li><a class="md-nav__link" href="#qgis-scripting">QGIS console recipes</a></li>
+          <li><a class="md-nav__link" href="#desktop-app">Desktop application</a></li>
+
+          <li class="md-nav__section">Reference</li>
+          <li><a class="md-nav__link" href="#ref-models">Regression models</a></li>
+          <li><a class="md-nav__link" href="#ref-preprocessing">Preprocessing methods</a></li>
+          <li><a class="md-nav__link" href="#ref-resampling">Resampling methods</a></li>
+          <li><a class="md-nav__link" href="#ref-sensors">Sensor band presets</a></li>
+          <li><a class="md-nav__link" href="#ref-metrics">Metrics</a></li>
+          <li><a class="md-nav__link" href="#ref-formats">Image formats</a></li>
+          <li><a class="md-nav__link" href="#ref-outputs">Output files</a></li>
+          <li><a class="md-nav__link" href="#ref-model-bundle">Saved model contents</a></li>
+          <li><a class="md-nav__link" href="#ref-structure">Project structure</a></li>
+
+          <li class="md-nav__section">Project</li>
+          <li><a class="md-nav__link" href="#troubleshooting">Troubleshooting</a></li>
+          <li><a class="md-nav__link" href="#project-status">Project status</a></li>
+          <li><a class="md-nav__link" href="#citation">Citation and license</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- ============================ on this page ========================== -->
+    <aside class="md-sidebar md-sidebar--secondary">
+      <nav class="md-nav md-nav--secondary" aria-label="On this page">
+        <div class="md-nav__title">On this page</div>
+        <ul class="md-nav__list">
+          <li><a class="md-nav__link" href="#what-it-does">What PARACUDA-NG does today</a></li>
+          <li><a class="md-nav__link" href="#three-ways">Three ways to run it</a></li>
+          <li><a class="md-nav__link" href="#getting-started">Getting started</a></li>
+          <li><a class="md-nav__link" href="#input-data">Input data layout</a></li>
+          <li><a class="md-nav__link" href="#workflow">The seven-step workflow</a></li>
+          <li><a class="md-nav__link" href="#data-converter">Data Converter</a></li>
+          <li><a class="md-nav__link" href="#extra-tools">Extra tools</a></li>
+          <li><a class="md-nav__link" href="#python-package">Python package</a></li>
+          <li><a class="md-nav__link" href="#python-scripting">Python scripting recipes</a></li>
+          <li><a class="md-nav__link" href="#qgis-plugin">QGIS plugin</a></li>
+          <li><a class="md-nav__link" href="#qgis-scripting">QGIS console recipes</a></li>
+          <li><a class="md-nav__link" href="#desktop-app">Desktop application</a></li>
+          <li><a class="md-nav__link" href="#reference">Reference tables</a></li>
+          <li><a class="md-nav__link" href="#troubleshooting">Troubleshooting</a></li>
+          <li><a class="md-nav__link" href="#project-status">Project status</a></li>
+          <li><a class="md-nav__link" href="#citation">Citation and license</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- ============================ content =============================== -->
+    <div class="md-content">
+      <article class="md-content__inner md-typeset">
+
+        <!-- ------------------------------- hero -------------------------- -->
+        <div class="hero">
+          <div class="hero__content">
+            <p class="eyebrow">Free and open source</p>
+            <h1>PARACUDA-NG</h1>
+            <p class="hero__sub">PARAmetric CUbe Data Analysis - <span style="white-space:nowrap">Next Generation</span></p>
+
+            <!-- Live status badges. Each one queries the registry at render time,
+                 so they fill in by themselves once the package is published. -->
+            <p class="shields">
+              <a href="https://pypi.org/project/paracuda-ng/" target="_blank" rel="noopener"><img src="https://img.shields.io/pypi/v/paracuda-ng.svg?color=0073b7&label=pypi" alt="PyPI version" loading="lazy"></a>
+              <a href="https://pepy.tech/project/paracuda-ng" target="_blank" rel="noopener"><img src="https://img.shields.io/pepy/dt/paracuda-ng?label=downloads&amp;color=1f9d55" alt="PyPI downloads" loading="lazy"></a>
+              <a href="https://anaconda.org/conda-forge/paracuda-ng" target="_blank" rel="noopener"><img src="https://img.shields.io/conda/vn/conda-forge/paracuda-ng.svg?color=fb8c00&label=conda-forge" alt="conda-forge version" loading="lazy"></a>
+              <a href="https://anaconda.org/conda-forge/paracuda-ng" target="_blank" rel="noopener"><img src="https://img.shields.io/conda/dn/conda-forge/paracuda-ng.svg?label=conda%20downloads" alt="conda-forge downloads" loading="lazy"></a>
+              <a href="https://plugins.qgis.org/plugins/paracuda_ng/" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/QGIS-plugin-589632?logo=qgis&amp;logoColor=white" alt="QGIS plugin" loading="lazy"></a>
+              <a href="https://pypi.org/project/paracuda-ng/" target="_blank" rel="noopener"><img src="https://img.shields.io/pypi/pyversions/paracuda-ng.svg?label=python" alt="Supported Python versions" loading="lazy"></a>
+              <a href="https://github.com/sharadgupta27/paracuda-ng/blob/main/LICENSE" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT license" loading="lazy"></a>
+              <a href="https://paracuda-ng.github.io/" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/docs-online-brightgreen" alt="Documentation" loading="lazy"></a>
+              <a href="https://github.com/sharadgupta27/paracuda-ng/stargazers" target="_blank" rel="noopener"><img src="https://img.shields.io/github/stars/sharadgupta27/paracuda-ng?style=flat&amp;color=blueviolet" alt="GitHub stars" loading="lazy"></a>
+            </p>
+            <p class="hero__lead">
+              PARACUDA-NG turns spectral measurements into calibrated prediction maps.
+              It loads spectra from a spreadsheet, harmonises them to any sensor band
+              configuration, trains and compares regression models, and applies the winner
+              to a full multispectral or hyperspectral image cube. The whole workflow runs
+              through a guided seven-step wizard, so no code is required, and the same
+              scientific engine is importable when you do want to script it.
+            </p>
+            <p class="hero__lead" style="margin-top:0.8rem">
+              PARACUDA-NG runs where you already work: as a desktop application, as the
+              <code>paracuda-ng</code> Python package, and as a native dockable QGIS plugin.
+            </p>
+            <div class="hero__actions">
+              <a class="md-button md-button--primary" href="#getting-started">Get started</a>
+              <a class="md-button" href="#python-package">Python package</a>
+              <a class="md-button" href="#qgis-plugin">QGIS plugin</a>
+              <a class="md-button" href="https://github.com/sharadgupta27/paracuda-ng" target="_blank" rel="noopener">View on GitHub</a>
+            </div>
+          </div>
+          <figure class="hero__media">
+            <img src="assets/screenshot_paracuda.png" alt="The PARACUDA-NG main window showing the seven-step wizard, the data panel and the live Model Development Flow diagram." loading="lazy">
+            <figcaption>The seven-step wizard, the live status log and the Model Development Flow diagram.</figcaption>
+          </figure>
+        </div>
+
+        <ul class="badges">
+          <li>Version 1.0.0</li>
+          <li>MIT licensed</li>
+          <li>Python 3.9 and newer</li>
+          <li>QGIS 3.22 and newer, including QGIS 4 on Qt6</li>
+          <li>Windows, macOS and Linux</li>
+          <li>11 regression models</li>
+          <li>10 preprocessing methods</li>
+          <li>7 resampling methods</li>
+          <li>11 sensor presets</li>
+        </ul>
+
+        <!-- ------------------------- what it does ------------------------ -->
+        <section class="feature-list">
+          <h2 id="what-it-does">What PARACUDA-NG does today</h2>
+          <p>
+            Everything below ships in version 1.0.0 and behaves the same in all three
+            distributions, because they share one scientific engine.
+          </p>
+
+          <div class="feature-step">
+            <h3 id="f-wizard">Guided seven-step workspace</h3>
+            <p>
+              Data, Configuration, Preprocess, Model, Validate, Execution and Apply are
+              seven tabs you move through with Back and Next. Nothing is hidden behind a
+              command line, and a live <em>Model Development Flow</em> diagram redraws itself
+              from your current settings so you can always see the pipeline you have built.
+              The diagram exports at 300 DPI for reports and papers.
+            </p>
+            <div class="pipeline" aria-label="Model development flow">
+              <div class="pipeline__node"><strong>1</strong><span>Data</span></div>
+              <div class="pipeline__node"><strong>2</strong><span>Property</span></div>
+              <div class="pipeline__node"><strong>3a</strong><span>Spectral</span></div>
+              <div class="pipeline__node"><strong>3b</strong><span>Excluded</span></div>
+              <div class="pipeline__node"><strong>4</strong><span>Resampling</span></div>
+              <div class="pipeline__node"><strong>5</strong><span>Preprocess</span></div>
+              <div class="pipeline__node"><strong>6</strong><span>Model</span></div>
+              <div class="pipeline__node"><strong>7</strong><span>Validation</span></div>
+              <div class="pipeline__node"><strong>8</strong><span>Apply</span></div>
+            </div>
+          </div>
+
+          <div class="feature-step">
+            <h3 id="f-data">Spectral data from any spreadsheet</h3>
+            <p>
+              Load <code>.xlsx</code>, <code>.xls</code>, <code>.ods</code> or <code>.csv</code> files.
+              Wavelength units are auto-detected, so a file in micrometres is recognised just
+              as reliably as one in nanometres, and the spectral domain (VSWIR, LWIR or both)
+              is inferred from the band range. Several target properties can be selected and
+              modelled in a single run. Reading runs off the interface thread behind a
+              progress dialog and picks the fastest reader available.
+            </p>
+          </div>
+
+          <div class="feature-step">
+            <h3 id="f-converter">A Data Converter for arbitrary instrument layouts</h3>
+            <p>
+              Instruments rarely export the layout a modelling tool expects. The built-in
+              three-step converter auto-detects row-wise or transposed column-wise files,
+              resolves nm and micrometre units, optionally merges a separate file of measured
+              properties, and writes out the standard PARACUDA-NG table.
+              See <a href="#data-converter">Data Converter</a>.
+            </p>
+          </div>
+
+          <div class="feature-step">
+            <h3 id="f-checks">Data checks and a distribution report</h3>
+            <p>
+              Before committing to a model, inspect what you loaded. Check Data reports shape,
+              ranges and missing values, Export Statistics writes a summary workbook, and the
+              Data Distribution panel examines one property at a time with a histogram, a
+              boxplot, a normal Q-Q plot, a cumulative distribution curve and a plain-language
+              list of findings such as skew, outliers or a suspiciously narrow range.
+            </p>
+          </div>
+
+          <div class="feature-step">
+            <h3 id="f-config">Spectral configuration and wavelength exclusion</h3>
+            <p>
+              Restrict the analysis to a wavelength range, then drop the regions you do not
+              trust. Type custom ranges, or use the one-click presets for water-absorption
+              bands and noisy detector edges. The presets follow the selected spectral domain
+              and merge into the omit list rather than stacking duplicates.
+            </p>
+          </div>
+
+          <div class="feature-step">
+            <h3 id="f-resample">Band resampling and cross-sensor harmonisation</h3>
+            <p>
+              Seven resampling methods bring laboratory spectra onto a satellite or airborne
+              band grid: Linear, Nearest-Neighbour, Quadratic and Cubic-Spline interpolation
+              plus three bandwidth-aware methods, Gaussian SRF convolution, Empirical SRF
+              integration and Band Averaging. Choose a sensor preset or supply your own band
+              centres, per-band FWHM table or full spectral response functions. Band binning
+              reduces a dense grid to a coarser one.
+              See <a href="#ref-resampling">resampling reference</a>.
+            </p>
+          </div>
+
+          <div class="feature-step">
+            <h3 id="f-preprocess">Ten preprocessing methods</h3>
+            <p>
+              Smoothing (Savitzky-Golay), spectral outlier removal, continuum removal,
+              baseline correction, first and second derivatives, absorbance, standard normal
+              variate and multiplicative scatter correction, plus optional PCA dimensionality
+              reduction inside the model pipeline. Missing-data strategies and target-outlier
+              removal are configured alongside them. Find Best Preprocessing searches the
+              options for you. See <a href="#ref-preprocessing">preprocessing reference</a>.
+            </p>
+          </div>
+
+          <div class="feature-step">
+            <h3 id="f-models">Eleven regression models with automated tuning</h3>
+            <p>
+              PLS-R, SVM, Ridge, Lasso, Multiple Linear Regression, Elastic Net, Huber
+              Regressor, Gradient Boosting, Gaussian Process, Random Forest and XGBoost, with
+              an Artificial Neural Network (multi-layer perceptron) available as well. Every
+              hyperparameter is editable, and Optuna searches the space for you when you would
+              rather not tune by hand. PLS and PCA component counts can be optimised
+              automatically. See <a href="#ref-models">model reference</a>.
+            </p>
+          </div>
+
+          <div class="feature-step">
+            <h3 id="f-validate">Cross-validation and overfitting detection</h3>
+            <p>
+              K-Fold, Leave-One-Out and Leave-P-Out strategies score every model on the
+              original units of the property, not on scaled values. Train and test scores are
+              compared automatically and an overfitting assessment is reported next to the
+              metrics, so an implausibly good calibration does not slip through.
+            </p>
+          </div>
+
+          <div class="feature-step">
+            <h3 id="f-batch">Batch mode with a best-model recommendation</h3>
+            <p>
+              Select several properties and several models and PARACUDA-NG trains the whole
+              matrix in one run, then recommends the best model per property from R squared,
+              RMSE and the cross-validation results. Results arrive as an Excel workbook with a
+              comparison sheet per property and a multi-page PDF of plots: observed against
+              predicted scatter plots, reflectance spectra and feature importance (importance
+              bars for tree models, wavelength-correlation plots for the rest).
+            </p>
+          </div>
+
+          <div class="feature-step">
+            <h3 id="f-compositional">Compositional log-ratio modelling</h3>
+            <p>
+              Sand, silt and clay have to add up to 100 percent, and independent models do not
+              respect that. Select the parts, choose ALR, CLR or ILR, and PARACUDA-NG models in
+              log-ratio space and maps the predictions back so they sum to the total.
+            </p>
+          </div>
+
+          <div class="feature-step">
+            <h3 id="f-apply">Apply to image cubes and to unknown tables</h3>
+            <p>
+              A trained model can predict a full image cube or a new spreadsheet of spectra.
+              GeoTIFF, ENVI (<code>.dat</code>, <code>.bil</code>, <code>.bip</code>,
+              <code>.bsq</code> with a <code>.hdr</code>), ERDAS Imagine <code>.img</code>,
+              NITF and PCIDSK are supported. Wavelengths and FWHM are recovered from the header,
+              gain and offset are applied so raw digital numbers become physical reflectance,
+              no-data and background pixels are masked instead of predicted, and large scenes
+              are streamed in chunks so memory stays flat. The prediction is written back in the
+              same format with georeferencing preserved.
+            </p>
+          </div>
+
+          <div class="feature-step">
+            <h3 id="f-integrity">Integrity and harmonisation tools</h3>
+            <p>
+              Check Spectral Integrity runs a label-permutation test and a spectral-mixing test
+              to confirm that a good score reflects real spectral information rather than
+              chance. Spectral Harmonization fits a PLS transfer function between two
+              instruments so a model calibrated on one can be applied to the other.
+            </p>
+          </div>
+
+          <div class="feature-step">
+            <h3 id="f-interface">Themes, help and portable models</h3>
+            <p>
+              Five colour themes (Ocean, Slate, Forest, Light-Contrast and Dark), a searchable
+              in-app Help Assistant covering 27 topics from loading data to interpreting
+              results, and a single <code>.joblib</code> model format that is interchangeable
+              between the desktop application, the Python package and the QGIS plugin.
+            </p>
+          </div>
+        </section>
+
+        <hr>
+
+        <!-- ------------------------- three ways -------------------------- -->
+        <section>
+          <h2 id="three-ways">Three ways to run it</h2>
+          <p>
+            All three distributions share the same <code>preprocessing</code>,
+            <code>models</code>, <code>validation</code> and <code>utils</code> packages. Only
+            the interface differs, and a model trained in one can be loaded in either of the
+            others.
+          </p>
+
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h3>Desktop application</h3>
+              <p>
+                A standalone Tkinter application. Best when you want the full workflow on a
+                laptop with no other software installed. A one-click launcher sets up the
+                Conda environment for you.
+              </p>
+              <p><a href="#desktop-app">Desktop guide</a></p>
+            </div>
+            <div class="feature-card">
+              <h3>Python package</h3>
+              <p>
+                <code>pip install paracuda-ng</code> gives you the same window plus an
+                importable engine, bundled example data and two command-line entry points.
+                Best for scripted or reproducible work.
+              </p>
+              <p><a href="#python-package">Python guide</a></p>
+            </div>
+            <div class="feature-card">
+              <h3>QGIS plugin</h3>
+              <p>
+                A native dockable Qt panel inside QGIS. Best when your imagery is already in a
+                QGIS project: predict straight onto a loaded raster layer and get the result
+                back as a new layer.
+              </p>
+              <p><a href="#qgis-plugin">QGIS guide</a></p>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Capability</th><th>Desktop</th><th>Python package</th><th>QGIS plugin</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Seven-step wizard</td><td>Yes (Tkinter)</td><td>Yes (Tkinter)</td><td>Yes (Qt dock panel)</td></tr>
+              <tr><td>Full scientific engine</td><td>Yes</td><td>Yes</td><td>Yes (vendored)</td></tr>
+              <tr><td>Importable API</td><td>From the checkout</td><td>Yes, installed</td><td>From the QGIS console</td></tr>
+              <tr><td>Bundled example data</td><td>Sample Data folder</td><td><code>load_sample()</code></td><td>Sample Data folder</td></tr>
+              <tr><td>Predict on a file on disk</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+              <tr><td>Predict on a loaded QGIS layer</td><td>No</td><td>No</td><td>Yes</td></tr>
+              <tr><td>Result added back to the map</td><td>No</td><td>No</td><td>Yes, with a colour map</td></tr>
+              <tr><td>Model file format</td><td colspan="3"><code>.joblib</code>, interchangeable across all three</td></tr>
+              <tr><td>Install command</td><td>Clone plus <code>requirements.txt</code></td><td><code>pip install paracuda-ng</code></td><td>Install from ZIP</td></tr>
+            </tbody>
+          </table>
+          </div>
+        </section>
+
+        <hr>
+
+        <!-- ------------------------- getting started --------------------- -->
+        <section>
+          <h2 id="getting-started">Getting started</h2>
+          <p>Pick the distribution that matches how you work. Each tab below is self-contained.</p>
+
+          <div class="tabbed">
+            <div class="tabbed__labels" role="tablist">
+              <button class="tabbed__label" role="tab" aria-selected="true">Python package</button>
+              <button class="tabbed__label" role="tab" aria-selected="false">QGIS plugin</button>
+              <button class="tabbed__label" role="tab" aria-selected="false">Desktop application</button>
+            </div>
+
+            <div class="tabbed__panel" role="tabpanel">
+              <p>Requires Python 3.9 or newer with Tkinter available. Tkinter ships with the
+              python.org and Conda installers; on Debian or Ubuntu install
+              <code>python3-tk</code> first.</p>
+<pre><code class="language-bash">pip install paracuda-ng</code></pre>
+              <p>Then open the window from Python or from the terminal:</p>
+<pre><code class="language-python">import paracuda_ng
+
+paracuda_ng()          # the module itself is callable</code></pre>
+<pre><code class="language-bash">paracuda               # same window, from the terminal
+paracuda-converter     # the standalone Data Converter</code></pre>
+              <p>Everything the interface needs, including scikit-learn, XGBoost, Optuna and
+              rasterio, is installed automatically as a dependency.</p>
+            </div>
+
+            <div class="tabbed__panel" role="tabpanel" hidden>
+              <p>Requires QGIS 3.22 or newer. QGIS 4 on Qt6 is supported.</p>
+              <ol>
+                <li>Build the ZIP from the root of the
+                  <a href="https://github.com/sharadgupta27/paracuda-qgis" target="_blank" rel="noopener">paracuda-qgis</a>
+                  repository, or download a released <code>paracuda_ng.zip</code>:
+<pre><code class="language-bash">python tools/make_zip.py</code></pre>
+                </li>
+                <li>In QGIS open <strong>Plugins &rarr; Manage and Install Plugins &rarr;
+                  Install from ZIP</strong> and choose <code>dist/paracuda_ng.zip</code>.</li>
+                <li>Enable <strong>PARACUDA-NG</strong> under <em>Installed</em>. The toolbar
+                  icon opens the dock panel.</li>
+                <li>The first analysis offers to install the Python packages QGIS does not
+                  ship. Accept, or trigger it from <strong>Tools &rarr; Install Python
+                  dependencies</strong>.</li>
+              </ol>
+            </div>
+
+            <div class="tabbed__panel" role="tabpanel" hidden>
+              <p>Clone the repository, then either double-click the launcher or install the
+              requirements yourself.</p>
+<pre><code class="language-bash">git clone https://github.com/sharadgupta27/paracuda-ng.git
+cd paracuda-ng
+pip install -r requirements.txt
+python paracuda.py</code></pre>
+              <p>On Windows, <code>run_paracuda.bat</code> finds your Conda installation,
+              creates the <code>paracuda</code> environment on first use, and launches the
+              application. The only prerequisite is Miniforge, Miniconda or Anaconda.</p>
+            </div>
+          </div>
+
+          <div class="admonition admonition--tip">
+            <p class="admonition-title">Try it without your own data</p>
+            <p>
+              Two example workbooks ship with the software: 598 soil samples with eight
+              measured properties and 16 spectral bands, plus 32 held-out samples for the
+              Apply step. In the Python package they are one call away with
+              <code>paracuda_ng.load_sample()</code>; the desktop and QGIS trees keep them in
+              the <code>Sample Data</code> folder.
+            </p>
+          </div>
+        </section>
+
+        <hr>
+
+        <!-- ------------------------- input data -------------------------- -->
+        <section>
+          <h2 id="input-data">Input data layout</h2>
+          <p>
+            PARACUDA-NG expects one row per sample in a single sheet. The first column holds
+            the sample name, the next columns hold the measured properties, and the remaining
+            column headers are the wavelengths:
+          </p>
+          <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Names</th><th>Sand</th><th>Silt</th><th>Clay</th><th>pH</th><th>450</th><th>500</th><th>550</th><th>...</th><th>2400</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>S001</td><td>42.1</td><td>31.4</td><td>26.5</td><td>7.8</td><td>0.081</td><td>0.094</td><td>0.112</td><td>...</td><td>0.271</td></tr>
+              <tr><td>S002</td><td>55.0</td><td>28.2</td><td>16.8</td><td>7.4</td><td>0.076</td><td>0.088</td><td>0.104</td><td>...</td><td>0.258</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <ul>
+            <li>Wavelength headers may be in nanometres or micrometres. The unit is detected
+              from the value range, and micrometres are converted to nanometres internally.</li>
+            <li>Reflectance is expected in physical units, normally 0 to 1. Scaled integers in
+              an image are converted automatically from the header gain and offset.</li>
+            <li>Property columns can be any numeric measurement: soil texture, organic carbon,
+              chlorophyll content, moisture, mineral abundance and so on.</li>
+            <li>Any layout that does not look like this can be converted with the
+              <a href="#data-converter">Data Converter</a>.</li>
+          </ul>
+        </section>
+
+        <hr>
+
+        <!-- ------------------------- workflow ---------------------------- -->
+        <section>
+          <h2 id="workflow">The seven-step workflow</h2>
+          <p>
+            The tabs run left to right, and each step only asks for what the next one needs.
+            You can move back at any time; the flow diagram updates as you go.
+          </p>
+
+          <h3 id="step-data">Step 1. Data</h3>
+          <p>Load the spectra and choose what to model.</p>
+          <ul>
+            <li><strong>Load Excel</strong> opens the spreadsheet or CSV and reports the number
+              of samples, properties and bands in the log panel.</li>
+            <li><strong>Check Data</strong> summarises shape, ranges, missing values and the
+              detected wavelength unit and spectral domain.</li>
+            <li><strong>Export Statistics</strong> writes descriptive statistics to a workbook.</li>
+            <li><strong>Select Properties</strong> picks one or more target columns. Selecting
+              more than one switches the run into batch mode.</li>
+            <li><strong>Compositional (log-ratio)</strong> is set here when the selected parts
+              sum to a fixed total. Choose ALR, CLR or ILR and predictions are returned on the
+              original scale, summing back to 100 percent.</li>
+          </ul>
+
+          <h3 id="step-configuration">Step 2. Configuration</h3>
+          <p>Decide which part of the spectrum the model sees and on which band grid.</p>
+          <ul>
+            <li><strong>Wavelength range</strong> trims the analysis to a minimum and maximum.</li>
+            <li><strong>Omit ranges</strong> removes regions you do not trust. Enter ranges such
+              as <code>1350-1450, 1800-1950</code> or apply the water-absorption and noisy-edge
+              presets, which adapt to the detected spectral domain.</li>
+            <li><strong>Resampling</strong> selects a sensor preset or a custom grid, and one of
+              the seven methods. The bandwidth-aware methods need per-band FWHM, which is
+              either taken from the preset, estimated from band spacing, or uploaded as a CSV.</li>
+            <li><strong>Spectral response functions</strong> can be uploaded for Empirical SRF
+              resampling when you have measured response curves.</li>
+            <li><strong>Binning</strong> keeps one representative band per group when the grid
+              is denser than the model needs.</li>
+          </ul>
+
+          <h3 id="step-preprocess">Step 3. Preprocess</h3>
+          <p>
+            Choose a single method, or let <strong>Find Best Preprocessing</strong> compare
+            them. Missing-data handling and target-outlier removal are configured on this tab
+            as well. Fitted transforms, notably multiplicative scatter correction, store their
+            reference spectrum inside the saved model so prediction reproduces training
+            exactly. See the <a href="#ref-preprocessing">preprocessing reference</a>.
+          </p>
+
+          <h3 id="step-model">Step 4. Model</h3>
+          <ul>
+            <li>Pick one model, or tick several for a batch comparison.</li>
+            <li>Every hyperparameter is editable, with sensible defaults filled in.</li>
+            <li><strong>Optuna tuning</strong> searches the space automatically. The search
+              space used for each model is shown before the run and stored with the results.</li>
+            <li><strong>Component optimisation</strong> scans PLS or PCA component counts and
+              keeps the best.</li>
+            <li>Optional PCA dimensionality reduction can be inserted ahead of the regressor.</li>
+          </ul>
+
+          <h3 id="step-validate">Step 5. Validate</h3>
+          <ul>
+            <li><strong>K-Fold</strong> with a configurable fold count and optional shuffling.</li>
+            <li><strong>Leave-One-Out</strong> for small datasets.</li>
+            <li><strong>Leave-P-Out</strong> when you want to hold out groups of samples.</li>
+          </ul>
+          <p>
+            Scores are computed on the original units of the property, so an RMSE in percent
+            clay stays in percent clay. Component counts are clamped to the smallest training
+            fold so a valid full-data setting cannot make individual folds fail.
+          </p>
+
+          <h3 id="step-execution">Step 6. Execution</h3>
+          <p>
+            Run the analysis. Progress is reported in the status log, and long tasks run on a
+            background thread so the window stays responsive. When the run finishes you get:
+          </p>
+          <ul>
+            <li>An Excel workbook with per-model and per-property comparison sheets.</li>
+            <li>A multi-page PDF with observed against predicted scatter plots, reflectance
+              spectra and feature-importance charts.</li>
+            <li>A best-model recommendation per property, with an overfitting assessment.</li>
+            <li>A saved <code>.joblib</code> model. The model file, the Excel report and the PDF
+              share one run timestamp so they stay matched.</li>
+          </ul>
+
+          <h3 id="step-apply">Step 7. Apply</h3>
+          <p>Use a saved model on new data.</p>
+          <ul>
+            <li><strong>Unknown table</strong>: load a spreadsheet of spectra without measured
+              properties and get a workbook of predictions.</li>
+            <li><strong>Image cube</strong>: load a multispectral or hyperspectral image and
+              predict pixel by pixel. In QGIS, pick a raster layer that is already loaded and
+              the prediction is added back to the map with a matching colour map.</li>
+            <li><strong>Export the resampled cube</strong> to confirm that harmonisation
+              produced sensible spectra before you trust the prediction.</li>
+          </ul>
+          <p>
+            The saved model carries its own band grid, exclusion ranges, resampling
+            configuration and preprocessing parameters, so incoming data is aligned to exactly
+            what the model was trained on, whatever grid it arrives on.
+          </p>
+        </section>
+
+        <hr>
+
+        <!-- ------------------------- data converter ---------------------- -->
+        <section>
+          <h2 id="data-converter">Data Converter</h2>
+          <p>
+            Reachable from <strong>Tools &rarr; Data Converter</strong>, from the
+            <code>paracuda-converter</code> command, or by running
+            <code>utils/data_converter.py</code> in the desktop checkout. It is a three-step
+            wizard: <em>Load Data</em>, <em>Configure</em>, <em>Preview and Export</em>.
+          </p>
+          <ul>
+            <li>Detects whether samples run along rows or along columns and transposes when needed.</li>
+            <li>Finds the wavelength header row or column, in nanometres or micrometres.</li>
+            <li>Optionally merges a second file holding the measured properties, matched on the
+              sample name.</li>
+            <li>Previews the result before writing, then exports the standard
+              <code>Names | Prop1 ... PropN | WL1 ... WLM</code> table.</li>
+          </ul>
+          <figure class="figure">
+            <img src="assets/screenshot_data_converter.png" alt="The PARACUDA-NG Data Converter showing the load, configure and preview steps." loading="lazy">
+            <figcaption>The Data Converter turns an arbitrary instrument export into the layout PARACUDA-NG expects.</figcaption>
+          </figure>
+<pre><code class="language-bash">paracuda-converter                              # installed with the Python package
+python -m paracuda_ng.utils.data_converter      # same wizard, as a module
+python utils/data_converter.py                  # from the desktop checkout</code></pre>
+        </section>
+
+        <hr>
+
+        <!-- ------------------------- extra tools ------------------------- -->
+        <section>
+          <h2 id="extra-tools">Extra tools</h2>
+
+          <h3 id="tool-integrity">Check Spectral Integrity</h3>
+          <p>
+            A good R squared is not proof that the model learned anything spectral. This suite
+            runs two tests. The <strong>label-permutation test</strong> refits the model many
+            times on deliberately shuffled targets: if the shuffled scores approach your real
+            score, the result is chance. The <strong>spectral-mixing test</strong> replaces a
+            fraction of the spectra with mixtures and checks that performance degrades the way
+            genuine spectral information should. Both produce a plot and a written verdict.
+          </p>
+
+          <h3 id="tool-harmonization">Spectral Harmonization</h3>
+          <p>
+            Fits a PLS transfer function between spectra of the same samples measured on two
+            instruments, so a model calibrated on the source instrument can be applied to the
+            target. The transfer function is saved and reloaded like a model.
+          </p>
+
+          <h3 id="tool-distribution">Data Distribution</h3>
+          <p>
+            Examines one property at a time from a drop-down: histogram, boxplot, normal Q-Q
+            plot, cumulative distribution and a findings list that flags skew, heavy tails,
+            outliers and narrow ranges before they quietly ruin a calibration.
+          </p>
+
+          <h3 id="tool-help">Help Assistant</h3>
+          <p>
+            A searchable knowledge base built into the application, covering 27 topics
+            including choosing a model, compositional modelling, preprocessing options,
+            cross-validation, image processing, overfitting detection, interpreting results and
+            best practices for spectral modelling. Search by keyword and related topics are
+            suggested alongside the answer.
+          </p>
+        </section>
+
+        <hr>
+
+        <!-- ------------------------- python package ---------------------- -->
+        <section>
+          <h2 id="python-package">Python package</h2>
+          <p>
+            Distribution name <code>paracuda-ng</code>, import name <code>paracuda_ng</code>,
+            version 1.0.0, MIT licensed.
+          </p>
+
+          <h3 id="py-install">Installation</h3>
+<pre><code class="language-bash">pip install paracuda-ng</code></pre>
+          <p>From a clone of the repository instead:</p>
+<pre><code class="language-bash">pip install .</code></pre>
+          <p>An optional accelerator installs a Rust reader that parses large spectral
+          workbooks several times faster than the default engine:</p>
+<pre><code class="language-bash">pip install "paracuda-ng[fast]"</code></pre>
+          <p>
+            Dependencies pulled in automatically: NumPy, pandas, SciPy, scikit-learn,
+            matplotlib, joblib, XGBoost, Optuna, rasterio, spectral, Pillow, openpyxl, xlrd and
+            odfpy. Tkinter comes from the standard library.
+          </p>
+
+          <h3 id="py-open">Opening the window</h3>
+<pre><code class="language-python">import paracuda_ng
+
+paracuda_ng()                  # the module itself is callable</code></pre>
+          <p>Equivalent forms:</p>
+<pre><code class="language-python">from paracuda_ng import launch
+launch()
+
+import paracuda_ng
+paracuda_ng.launch()</code></pre>
+          <p>From a terminal:</p>
+<pre><code class="language-bash">paracuda               # main application
+paracuda-converter     # standalone Data Converter wizard
+python -m paracuda_ng  # run the package as a module</code></pre>
+          <p>The window class is importable for scripted or headless use:</p>
+<pre><code class="language-python">from paracuda_ng import Paracuda
+
+app = Paracuda()
+app.mainloop()</code></pre>
+
+          <h3 id="py-samples">Bundled example data</h3>
+          <p>
+            Two workbooks install with the package, so there is nothing to download before
+            trying PARACUDA-NG. They double as a reference for the expected input layout.
+          </p>
+<pre><code class="language-python">import paracuda_ng
+
+sample = paracuda_ng.load_sample()     # DataFrame: 598 soil samples, 25 columns
+paracuda_ng.view(sample)               # opens it in your spreadsheet program
+
+paracuda_ng.load_sample("unknown")     # 32 held-out samples, for the Apply step
+paracuda_ng.list_samples()             # ['sample', 'unknown']
+paracuda_ng.sample_path()              # full path, to load through the window</code></pre>
+          <p>
+            Both sets contain the sample name, eight measured soil properties (Sand, Silt,
+            Clay, BD, pH, CaCO, OC and CarbonStock) and 16 spectral bands.
+          </p>
+          <p><code>view()</code> also accepts a DataFrame of your own or an existing path:</p>
+<pre><code class="language-python">paracuda_ng.view(my_dataframe)         # written to a temporary workbook and opened
+paracuda_ng.view("results.xlsx")       # open an existing file
+paracuda_ng.view()                     # opens the bundled sample</code></pre>
+
+          <h3 id="py-api">Top-level API</h3>
+          <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td><code>paracuda_ng()</code></td><td>Open the window. The module is callable.</td></tr>
+              <tr><td><code>launch()</code></td><td>Open the window and run until it is closed. Returns the instance.</td></tr>
+              <tr><td><code>main()</code></td><td>Entry point behind the <code>paracuda</code> command.</td></tr>
+              <tr><td><code>Paracuda</code></td><td>The main window class, imported lazily so Tk is not required to import the package.</td></tr>
+              <tr><td><code>load_sample(name="sample")</code></td><td>Bundled workbook as a DataFrame.</td></tr>
+              <tr><td><code>sample_path(name="sample")</code></td><td>Path to a bundled workbook.</td></tr>
+              <tr><td><code>list_samples()</code></td><td>Names of the bundled workbooks.</td></tr>
+              <tr><td><code>view(obj=None)</code></td><td>Open a DataFrame, a path, or the bundled sample in a spreadsheet program.</td></tr>
+              <tr><td><code>__version__</code></td><td>Package version string.</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <div class="admonition">
+            <p class="admonition-title">Importing is cheap</p>
+            <p>
+              <code>import paracuda_ng</code> does not pull in Tk, scikit-learn or SciPy. Those
+              arrive only when you open the window or call into the modelling modules, which
+              keeps the package usable in scripts and notebooks that never draw an interface.
+            </p>
+          </div>
+        </section>
+
+        <hr>
+
+        <!-- ------------------------- python recipes ---------------------- -->
+        <section>
+          <h2 id="python-scripting">Python scripting recipes</h2>
+          <p>
+            The engine behind the wizard is plain Python and is importable directly. Every
+            snippet below runs against the bundled sample data.
+          </p>
+
+          <h3 id="py-load">Load spectra and split the columns</h3>
+<pre><code class="language-python">import numpy as np
+import paracuda_ng
+
+df = paracuda_ng.load_sample()
+
+# Wavelength columns are the ones whose header is a number.
+wl_cols = [c for c in df.columns if str(c).replace(".", "", 1).isdigit()]
+wavelengths = np.array([float(c) for c in wl_cols])
+X = df[wl_cols].to_numpy(dtype=float)
+y = df["Clay"].to_numpy(dtype=float)
+
+print(X.shape, wavelengths.min(), wavelengths.max())</code></pre>
+
+          <h3 id="py-resample">Resample to a sensor band grid</h3>
+<pre><code class="language-python">from paracuda_ng.preprocessing.data_processing import (
+    SENSOR_OPTIONS, get_sensor_bands, resample_spectra,
+)
+
+print(SENSOR_OPTIONS)
+# ['Custom', 'Sentinel-2', 'Landsat-5', 'Landsat-7', 'Landsat-8', 'Landsat-9',
+#  'VENUS', 'PlanetScope', 'DESIS', 'EnMAP', 'EMIT', 'PRISMA']
+
+centers, fwhms = get_sensor_bands("Sentinel-2")
+
+# Bandwidth-aware resampling needs the per-band FWHM.
+X_s2 = resample_spectra(X, wavelengths, centers,
+                        method="Gaussian SRF", fwhms=fwhms)
+
+# Plain interpolation does not.
+X_lin = resample_spectra(X, wavelengths, centers, method="Linear Interpolation")</code></pre>
+
+          <h3 id="py-preprocess">Preprocess spectra</h3>
+<pre><code class="language-python">from paracuda_ng.preprocessing.data_processing import (
+    PREPROCESS_METHODS, preprocess_spectra,
+)
+
+print(PREPROCESS_METHODS)
+
+X_cr = preprocess_spectra(X, "Continuum Removal")
+X_d1 = preprocess_spectra(X, "First Derivative")
+X_sg = preprocess_spectra(X, "Smoothing", window_length=11, polyorder=2)
+X_snv = preprocess_spectra(X, "SNV")          # acronyms are accepted</code></pre>
+
+          <h3 id="py-train">Train a model and score it</h3>
+<pre><code class="language-python">from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from paracuda_ng.models.model_training import create_model
+from paracuda_ng.models.batch_processing import compute_metrics, rpd_quality
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42)
+
+scaler_X = StandardScaler().fit(X_train)
+scaler_y = StandardScaler().fit(y_train.reshape(-1, 1))
+
+model = create_model("PLS-R", {"n_components": 8})
+model.fit(scaler_X.transform(X_train),
+          scaler_y.transform(y_train.reshape(-1, 1)).ravel())
+
+pred_scaled = model.predict(scaler_X.transform(X_test)).reshape(-1, 1)
+pred = scaler_y.inverse_transform(pred_scaled).ravel()
+
+metrics = compute_metrics(y_test, pred)
+print("R2      ", round(metrics["r2"], 3))
+print("RMSE    ", round(metrics["rmse"], 3))
+print("RPD     ", round(metrics["rpd"], 2), rpd_quality(metrics["rpd"]))
+print("nRMSEP %", round(metrics["nrmsep"], 2))</code></pre>
+
+          <h3 id="py-cv">Cross-validate</h3>
+<pre><code class="language-python">from paracuda_ng.validation.cross_validation import perform_cross_validation
+
+rmse_scores, r2_scores, rmse_mean, r2_mean, rmse_std, r2_std = perform_cross_validation(
+    scaler_X.transform(X_train),
+    scaler_y.transform(y_train.reshape(-1, 1)).ravel(),
+    create_model("PLS-R", {"n_components": 8}),
+    "K-Fold",              # or "Leave-One-Out", "Leave-P-Out"
+    {"k_folds": 5, "shuffle": True},
+    scaler_y,
+    n_jobs=1,
+)
+
+print(f"CV R2   {r2_mean:.3f} +/- {r2_std:.3f}")
+print(f"CV RMSE {rmse_mean:.3f} +/- {rmse_std:.3f}")</code></pre>
+
+          <h3 id="py-tune">Tune hyperparameters with Optuna</h3>
+<pre><code class="language-python">from paracuda_ng.models.hyperparameter_tuning import (
+    tune_hyperparameters, format_search_space,
+)
+
+base_params = {"n_estimators": 300, "max_depth": "None", "min_samples_split": 2,
+               "min_samples_leaf": 1, "max_features": "sqrt", "bootstrap": True}
+
+print(format_search_space("Random Forest",
+                          n_features=X.shape[1], n_samples=X.shape[0]))
+
+best_params, best_rmse, study, message = tune_hyperparameters(
+    "Random Forest", base_params,
+    scaler_X.transform(X_train),
+    scaler_y.transform(y_train.reshape(-1, 1)).ravel(),
+    n_trials=30, cv_folds=3,
+)
+
+print(message, best_params, best_rmse)
+tuned = create_model("Random Forest", {**base_params, **best_params})</code></pre>
+
+          <h3 id="py-compositional">Compositional modelling</h3>
+<pre><code class="language-python">import numpy as np
+from paracuda_ng.preprocessing import compositional
+
+parts = df[["Sand", "Silt", "Clay"]].to_numpy(dtype=float)
+
+coords = compositional.forward(parts, "CLR")   # or "ALR", "ILR"
+# ... fit one model per coordinate, predict, then map back ...
+back = compositional.inverse(coords, "CLR", total=100.0)
+
+print(np.allclose(back.sum(axis=1), 100.0))    # True</code></pre>
+
+          <h3 id="py-image">Apply a saved model to an image cube</h3>
+<pre><code class="language-python">import joblib
+from paracuda_ng.utils.image_processing import (
+    read_geospatial_image, process_image_for_prediction, save_prediction_image,
+)
+
+bundle = joblib.load("Clay_PLS-R_20260808.joblib")
+
+# Physical reflectance, gain and offset applied, no-data turned into NaN.
+data, profile, img_wavelengths, img_fwhms, info = read_geospatial_image("scene.dat")
+
+scaled, shape, valid_mask, cube, target_wl = process_image_for_prediction(
+    data, img_wavelengths,
+    bundle["preprocessing"],
+    bundle["scaler_X"],
+    bundle["filtered_wavelengths"],
+    new_wavelengths=bundle["new_wavelengths"],
+    preprocess_kwargs=bundle["preprocessing_kwargs"],
+    resample_method=bundle["resample_method"],
+    new_fwhms=bundle["new_fwhms"],
+    srf_table=bundle["srf_table"],
+    nodata=profile.get("nodata"),
+    return_cube=False,
+)
+
+pred_scaled = bundle["model"].predict(scaled).reshape(-1, 1)
+pred = bundle["scaler_y"].inverse_transform(pred_scaled).ravel()
+
+save_prediction_image(pred, shape, profile, "clay_prediction.tif",
+                      band_name="Predicted Clay", valid_mask=valid_mask)</code></pre>
+          <div class="admonition admonition--tip">
+            <p class="admonition-title">Large scenes</p>
+            <p>
+              For a full hyperspectral scene, pass a <code>predict_fn</code> to
+              <code>process_image_for_prediction</code>. Predictions are then computed inside
+              the chunk loop and only a single prediction vector is held in memory, instead of
+              the complete scaled matrix. A 13 million pixel scene with 1787 bands is roughly
+              89 GiB as a scaled matrix and roughly 54 MB as a prediction vector.
+            </p>
+          </div>
+<pre><code class="language-python">def predict_chunk(block):
+    scaled_pred = bundle["model"].predict(block).reshape(-1, 1)
+    return bundle["scaler_y"].inverse_transform(scaled_pred).ravel()
+
+pred, shape, valid_mask, cube, target_wl = process_image_for_prediction(
+    data, img_wavelengths,
+    bundle["preprocessing"], bundle["scaler_X"], bundle["filtered_wavelengths"],
+    new_wavelengths=bundle["new_wavelengths"],
+    preprocess_kwargs=bundle["preprocessing_kwargs"],
+    resample_method=bundle["resample_method"],
+    new_fwhms=bundle["new_fwhms"],
+    nodata=profile.get("nodata"),
+    return_cube=False,
+    chunk_pixels=100_000,
+    predict_fn=predict_chunk,
+)</code></pre>
+
+          <h3 id="py-integrity">Run the integrity tests</h3>
+<pre><code class="language-python">from paracuda_ng.preprocessing.data_processing import (
+    randomize_label_test, mix_spectra_integrity_check,
+    spectral_transfer_function, apply_transfer_function,
+)
+
+# Does the score survive shuffled labels? It should not.
+result = randomize_label_test(X, y, n_permutations=100, n_components=5, cv=5)
+
+# Does performance degrade the way real spectral information should?
+mixed = mix_spectra_integrity_check(X, y, mix_fraction=0.2, random_seed=42)
+
+# Harmonise one instrument to another, then apply the transfer function.
+pls, scaler_s, scaler_t = spectral_transfer_function(X_source, X_target, n_components=5)
+X_harmonised = apply_transfer_function(X_new, pls, scaler_s, scaler_t)</code></pre>
+        </section>
+
+        <hr>
+
+        <!-- ------------------------- qgis plugin ------------------------- -->
+        <section>
+          <h2 id="qgis-plugin">QGIS plugin</h2>
+          <p>
+            The plugin is the same seven-step wizard rewritten in Qt and docked inside QGIS.
+            The scientific backend is vendored into the plugin folder, so it installs
+            standalone: QGIS copies the plugin into your user profile and nothing else has to
+            be on the path.
+          </p>
+
+          <h3 id="qgis-requirements">Requirements</h3>
+          <ul>
+            <li>QGIS 3.22 or newer. QGIS 4 on Qt6 is supported.</li>
+            <li>Six Python packages QGIS does not ship: scikit-learn, joblib, optuna, xgboost,
+              rasterio and spectral.</li>
+          </ul>
+          <p>
+            The first time you run an analysis, PARACUDA-NG offers to install the missing ones
+            into the QGIS Python environment with <code>pip --user</code>. You can also trigger
+            it any time from <strong>Tools &rarr; Install Python dependencies</strong>.
+          </p>
+
+          <h3 id="qgis-install">Install from ZIP</h3>
+<pre><code class="language-bash">python tools/make_zip.py                # uses the sibling ../paracuda-ng checkout
+python tools/make_zip.py /path/to/paracuda-ng   # explicit backend source
+python tools/make_zip.py --no-sync           # paracuda_ng/ is already current</code></pre>
+          <p>
+            The result is <code>dist/paracuda_ng.zip</code>. In QGIS open
+            <strong>Plugins &rarr; Manage and Install Plugins &rarr; Install from ZIP</strong>,
+            choose that file, then enable <strong>PARACUDA-NG</strong> under <em>Installed</em>.
+            The toolbar icon opens the dock panel.
+          </p>
+
+          <h3 id="qgis-dev">Install for development</h3>
+          <p>Copy or symlink the <code>paracuda_ng/</code> folder into the QGIS plugin directory:</p>
+<pre><code class="language-bash">%APPDATA%\QGIS\QGIS3\profiles\default\python\plugins\    # QGIS 3
+%APPDATA%\QGIS\QGIS4\profiles\default\python\plugins\    # QGIS 4</code></pre>
+          <p>
+            Refresh the vendored backend first so it matches the desktop checkout, which is
+            expected as a sibling <code>../paracuda-ng</code> directory:
+          </p>
+<pre><code class="language-bash">python tools/sync_backend.py
+python tools/sync_backend.py /path/to/paracuda-ng
+export PARACUDA_DESKTOP=/path/to/paracuda-ng    # or set it in the environment</code></pre>
+          <p>Restart QGIS and enable the plugin.</p>
+
+          <h3 id="qgis-usage">Using the panel</h3>
+          <ol class="steps">
+            <li>
+              <h4>Data</h4>
+              <p>Load an Excel or CSV file of spectra, then choose the properties to model.</p>
+            </li>
+            <li>
+              <h4>Configuration and Preprocess</h4>
+              <p>Set the spectral domain, the resampling grid, the exclusion ranges and the
+                preprocessing method.</p>
+            </li>
+            <li>
+              <h4>Model and Validate</h4>
+              <p>Pick a model or a batch of models, optional Optuna tuning, and a
+                cross-validation strategy.</p>
+            </li>
+            <li>
+              <h4>Execution</h4>
+              <p>Run to produce the Excel report and the PDF plots. The best model is saveable
+                from the same screen.</p>
+            </li>
+            <li>
+              <h4>Apply</h4>
+              <p>Save the model, then predict on a raster layer that is already loaded in the
+                project. The prediction is added back to the map as a new layer with a matching
+                colour map.</p>
+            </li>
+          </ol>
+
+          <div class="admonition">
+            <p class="admonition-title">Why QGIS stays responsive</p>
+            <p>
+              Long tasks run on a background thread with a threading parallel backend, so
+              worker parallelism never spawns extra QGIS processes. Model files use the same
+              <code>.joblib</code> format as the desktop tool, so models move freely between
+              them.
+            </p>
+          </div>
+        </section>
+
+        <hr>
+
+        <!-- ------------------------- qgis recipes ------------------------ -->
+        <section>
+          <h2 id="qgis-scripting">QGIS console recipes</h2>
+          <p>
+            QGIS puts the plugin directory on <code>sys.path</code>, so the vendored engine is
+            importable straight from the <strong>Plugins &rarr; Python Console</strong>. These
+            snippets are useful for batch jobs and for Processing scripts.
+          </p>
+
+          <h3 id="qgis-import">Import the engine</h3>
+<pre><code class="language-python">from paracuda_ng.preprocessing.data_processing import (
+    get_sensor_bands, resample_spectra, preprocess_spectra,
+)
+from paracuda_ng.models.model_training import create_model
+from paracuda_ng.models.batch_processing import compute_metrics
+from paracuda_ng.utils.image_processing import (
+    read_geospatial_image, process_image_for_prediction, save_prediction_image,
+)</code></pre>
+
+          <h3 id="qgis-layer">Predict on the active raster layer</h3>
+<pre><code class="language-python">import joblib
+from qgis.core import QgsProject, QgsRasterLayer
+from qgis.utils import iface
+from paracuda_ng.utils.image_processing import (
+    read_geospatial_image, process_image_for_prediction, save_prediction_image,
+)
+
+layer = iface.activeLayer()                 # a raster layer selected in the panel
+source = layer.dataProvider().dataSourceUri()
+
+bundle = joblib.load("Clay_PLS-R_20260808.joblib")
+data, profile, wavelengths, fwhms, info = read_geospatial_image(source)
+
+def predict_chunk(block):
+    scaled = bundle["model"].predict(block).reshape(-1, 1)
+    return bundle["scaler_y"].inverse_transform(scaled).ravel()
+
+pred, shape, valid_mask, cube, target_wl = process_image_for_prediction(
+    data, wavelengths,
+    bundle["preprocessing"], bundle["scaler_X"], bundle["filtered_wavelengths"],
+    new_wavelengths=bundle["new_wavelengths"],
+    preprocess_kwargs=bundle["preprocessing_kwargs"],
+    resample_method=bundle["resample_method"],
+    new_fwhms=bundle["new_fwhms"],
+    nodata=profile.get("nodata"),
+    return_cube=False,
+    predict_fn=predict_chunk,
+)
+
+out_path = "/tmp/clay_prediction.tif"
+save_prediction_image(pred, shape, profile, out_path,
+                      band_name="Predicted Clay", valid_mask=valid_mask)
+
+result = QgsRasterLayer(out_path, "Predicted Clay")
+QgsProject.instance().addMapLayer(result)</code></pre>
+
+          <h3 id="qgis-batch">Batch over every raster in the project</h3>
+<pre><code class="language-python">from qgis.core import QgsProject, QgsRasterLayer
+
+for name, layer in QgsProject.instance().mapLayers().items():
+    if not isinstance(layer, QgsRasterLayer):
+        continue
+    source = layer.dataProvider().dataSourceUri()
+    print("Predicting", layer.name(), "from", source)
+    # ... reuse the prediction block above, writing one output per layer ...</code></pre>
+
+          <div class="admonition admonition--warning">
+            <p class="admonition-title">Check the band grid first</p>
+            <p>
+              A model trained on 16 laboratory bands can only be applied to imagery that covers
+              the same wavelength range. PARACUDA-NG resamples the image onto the model grid
+              automatically, but if the image does not overlap the training range at all, the
+              prediction is meaningless. Export the resampled cube once and look at the spectra
+              before trusting a new sensor.
+            </p>
+          </div>
+        </section>
+
+        <hr>
+
+        <!-- ------------------------- desktop ----------------------------- -->
+        <section>
+          <h2 id="desktop-app">Desktop application</h2>
+          <p>
+            The desktop build is the reference implementation: a standalone Tkinter application
+            with no QGIS and no packaging step in the way.
+          </p>
+
+          <h3 id="desktop-launcher">One-click launcher</h3>
+          <p>
+            If installing packages from a terminal is not how you want to spend your day,
+            double-click <code>run_paracuda.bat</code>. It:
+          </p>
+          <ol>
+            <li>Finds your Conda installation (Miniforge, Miniconda or Anaconda).</li>
+            <li>Creates the <code>paracuda</code> environment and installs everything from
+              <code>requirements.txt</code> the first time, which takes a few minutes.</li>
+            <li>Activates the environment and launches PARACUDA-NG.</li>
+          </ol>
+          <p>
+            The only prerequisite is a Conda installation. If Conda cannot be found or setup
+            fails, the launcher prints clear guidance and stays open so you can read it.
+          </p>
+
+          <h3 id="desktop-manual">Manual install</h3>
+<pre><code class="language-bash">pip install -r requirements.txt
+python paracuda.py</code></pre>
+
+          <h3 id="desktop-themes">Themes</h3>
+          <p>
+            Five colour themes are available from <strong>View &rarr; Theme</strong>: Ocean,
+            Slate, Forest, Light-Contrast and Dark. The Model Development Flow diagram follows
+            the active theme and exports at 300 DPI.
+          </p>
+        </section>
+
+        <hr>
+
+        <!-- ------------------------- reference --------------------------- -->
+        <section>
+          <h2 id="reference">Reference</h2>
+
+          <h3 id="ref-models">Regression models</h3>
+          <div class="table-wrap">
+          <table>
+            <thead><tr><th>Model</th><th>Key parameters</th><th>Good for</th></tr></thead>
+            <tbody>
+              <tr><td>PLS-R</td><td><code>n_components</code> (1 to 50, optimisable)</td><td>The chemometrics default. Many correlated bands, few samples.</td></tr>
+              <tr><td>SVM (SVR)</td><td><code>kernel</code>, <code>C</code>, <code>gamma</code>, <code>epsilon</code>, <code>degree</code></td><td>Non-linear relationships, moderate sample counts.</td></tr>
+              <tr><td>Ridge</td><td><code>alpha</code>, <code>solver</code>, <code>max_iter</code></td><td>A regularised linear baseline.</td></tr>
+              <tr><td>Lasso</td><td><code>alpha</code>, <code>max_iter</code>, <code>selection</code>, <code>tol</code></td><td>Sparse band selection.</td></tr>
+              <tr><td>Multiple Linear Regression</td><td><code>fit_intercept</code></td><td>A reference point on few, uncorrelated features.</td></tr>
+              <tr><td>Elastic Net</td><td><code>alpha</code>, <code>l1_ratio</code>, <code>max_iter</code>, <code>tol</code></td><td>Between Ridge and Lasso.</td></tr>
+              <tr><td>Huber Regressor</td><td><code>epsilon</code>, <code>alpha</code>, <code>max_iter</code></td><td>Targets with outliers you cannot remove.</td></tr>
+              <tr><td>Gradient Boosting</td><td><code>n_estimators</code>, <code>learning_rate</code>, <code>max_depth</code>, <code>subsample</code></td><td>Strong non-linear fits on larger datasets.</td></tr>
+              <tr><td>Gaussian Process</td><td><code>length_scale</code>, <code>alpha</code>, <code>n_restarts_optimizer</code></td><td>Small datasets where uncertainty matters.</td></tr>
+              <tr><td>Random Forest</td><td><code>n_estimators</code>, <code>max_depth</code>, <code>max_features</code>, <code>bootstrap</code></td><td>Robust default, gives feature importance.</td></tr>
+              <tr><td>XGBoost</td><td><code>n_estimators</code>, <code>max_depth</code>, <code>learning_rate</code>, <code>subsample</code>, <code>colsample_bytree</code>, <code>reg_alpha</code>, <code>reg_lambda</code></td><td>The usual winner on large tabular datasets.</td></tr>
+              <tr><td>Artificial Neural Network</td><td><code>hidden_layer_sizes</code>, <code>activation</code>, <code>solver</code>, <code>alpha</code>, <code>early_stopping</code></td><td>Non-linear fits when you have plenty of samples.</td></tr>
+              <tr><td>PCA</td><td><code>n_components</code>, <code>svd_solver</code>, <code>whiten</code></td><td>Optional dimensionality reduction ahead of a regressor.</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p>
+            Tree-based models report importance bars; the others get wavelength-correlation
+            plots so you can still see which regions drive the prediction.
+          </p>
+
+          <h3 id="ref-preprocessing">Preprocessing methods</h3>
+          <div class="table-wrap">
+          <table>
+            <thead><tr><th>Method</th><th>Parameters</th><th>What it corrects</th></tr></thead>
+            <tbody>
+              <tr><td>No Preprocessing</td><td>none</td><td>Raw reflectance, the baseline to compare against.</td></tr>
+              <tr><td>Smoothing</td><td><code>window_length</code>, <code>polyorder</code></td><td>Savitzky-Golay filtering of instrument noise.</td></tr>
+              <tr><td>Spectral Outlier Removal</td><td><code>outlier_method</code> (zscore or iqr), <code>threshold</code></td><td>Drops whole spectra that sit far from the population.</td></tr>
+              <tr><td>Continuum Removal</td><td>none</td><td>Isolates absorption features from the overall shape.</td></tr>
+              <tr><td>Baseline Correction</td><td><code>baseline_method</code>, <code>degree</code></td><td>Removes a slowly varying baseline.</td></tr>
+              <tr><td>First Derivative</td><td>none</td><td>Removes additive offsets, sharpens features.</td></tr>
+              <tr><td>Second Derivative</td><td>none</td><td>Removes additive and multiplicative baseline drift.</td></tr>
+              <tr><td>Absorbance</td><td>none</td><td>Converts reflectance to log(1/R).</td></tr>
+              <tr><td>Standard Normal Variate (SNV)</td><td>none</td><td>Scatter correction per spectrum.</td></tr>
+              <tr><td>Multiplicative Scatter Correction (MSC)</td><td>fitted reference spectrum</td><td>Scatter correction against the training mean. The reference is stored inside the saved model.</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p>The acronyms <code>SNV</code> and <code>MSC</code> are accepted wherever the full
+          names are, so older configuration files keep working.</p>
+
+          <h3 id="ref-resampling">Resampling methods</h3>
+          <div class="table-wrap">
+          <table>
+            <thead><tr><th>Method</th><th>Needs FWHM</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Linear Interpolation</td><td>No</td><td>The default. Fast and predictable.</td></tr>
+              <tr><td>Nearest Neighbour Interpolation</td><td>No</td><td>Keeps sharp absorption features that linear interpolation would smear across a coarse grid.</td></tr>
+              <tr><td>Quadratic Interpolation</td><td>No</td><td>Smoother than linear on dense grids.</td></tr>
+              <tr><td>Cubic Spline</td><td>No</td><td>Smoothest interpolation, can overshoot near sharp features.</td></tr>
+              <tr><td>Gaussian SRF</td><td>Yes</td><td>Analytic Gaussian response, sigma = FWHM / 2.3548, integrated over plus or minus three sigma.</td></tr>
+              <tr><td>Empirical SRF</td><td>Yes</td><td>Integrates against uploaded per-band response curves, falling back to the Gaussian response where no curve is supplied.</td></tr>
+              <tr><td>Band Averaging</td><td>Yes</td><td>Flat top-hat response across each band's FWHM window.</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p>
+            Where a sensor preset provides no explicit FWHM, per-band values are estimated from
+            the local band spacing, so the bandwidth-aware methods still work.
+          </p>
+
+          <h3 id="ref-sensors">Sensor band presets</h3>
+          <div class="table-wrap">
+          <table>
+            <thead><tr><th>Sensor</th><th>Type</th><th>Bands used</th></tr></thead>
+            <tbody>
+              <tr><td>Sentinel-2 (MSI)</td><td>Multispectral</td><td>Published reflective band centres with their FWHM. No thermal channels.</td></tr>
+              <tr><td>Landsat-5 (TM)</td><td>Multispectral</td><td>Reflective bands B1 to B5 and B7 with FWHM, thermal B6 available separately.</td></tr>
+              <tr><td>Landsat-7 (ETM+)</td><td>Multispectral</td><td>Reflective bands B1 to B5 and B7 with FWHM, thermal B6 available separately.</td></tr>
+              <tr><td>Landsat-8 (OLI/TIRS)</td><td>Multispectral</td><td>Coastal, blue, green, red, NIR and SWIR bands with FWHM, thermal available separately.</td></tr>
+              <tr><td>Landsat-9 (OLI-2)</td><td>Multispectral</td><td>Spectrally identical to Landsat-8.</td></tr>
+              <tr><td>VENUS</td><td>Multispectral</td><td>Twelve published band centres. The preset key is spelled <code>VENUS</code>.</td></tr>
+              <tr><td>PlanetScope (SuperDove)</td><td>Multispectral</td><td>Eight VNIR bands.</td></tr>
+              <tr><td>DESIS</td><td>Hyperspectral</td><td>235 VNIR bands from about 402 to 999 nm.</td></tr>
+              <tr><td>EnMAP</td><td>Hyperspectral</td><td>Nominal VNIR and SWIR band centres.</td></tr>
+              <tr><td>EMIT</td><td>Hyperspectral</td><td>Nominal band centres.</td></tr>
+              <tr><td>PRISMA</td><td>Hyperspectral</td><td>239 bands on the nominal 10 nm grid from about 402 to 2497 nm.</td></tr>
+              <tr><td>Custom</td><td>Either</td><td>Your own centres, FWHM table or full SRF curves, uploaded as CSV.</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p>
+            Thermal bands are excluded by default so that VIS-NIR-SWIR datasets are not
+            polluted by channels the spectra do not cover.
+          </p>
+
+          <h3 id="ref-metrics">Metrics</h3>
+          <div class="table-wrap">
+          <table>
+            <thead><tr><th>Metric</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><code>r2</code></td><td>Coefficient of determination on the original units.</td></tr>
+              <tr><td><code>rmse</code> / <code>rmsep</code></td><td>Root mean squared error. The second name is the chemometrics convention for the test split.</td></tr>
+              <tr><td><code>mae</code></td><td>Mean absolute error.</td></tr>
+              <tr><td><code>rpd</code></td><td>Ratio of performance to deviation, with a quality label attached.</td></tr>
+              <tr><td><code>nrmsep</code></td><td>RMSE as a percentage of the observed range.</td></tr>
+              <tr><td><code>nrmsep_mean</code></td><td>RMSE as a percentage of the observed mean.</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p>
+            Train and test scores are compared automatically and an overfitting assessment is
+            reported alongside them, using the train and test R squared, the RMSE pair and the
+            cross-validated R squared.
+          </p>
+
+          <h3 id="ref-formats">Image formats</h3>
+          <div class="table-wrap">
+          <table>
+            <thead><tr><th>Format</th><th>Extensions</th><th>Spectral metadata</th></tr></thead>
+            <tbody>
+              <tr><td>GeoTIFF</td><td><code>.tif</code>, <code>.tiff</code></td><td>Per-band scale and offset from GDAL.</td></tr>
+              <tr><td>ENVI</td><td><code>.dat</code>, <code>.bil</code>, <code>.bip</code>, <code>.bsq</code> with <code>.hdr</code></td><td>Wavelengths, FWHM, gain, offset, no-data and band interleave read from the header.</td></tr>
+              <tr><td>ERDAS Imagine</td><td><code>.img</code></td><td>Georeferencing preserved.</td></tr>
+              <tr><td>NITF</td><td><code>.ntf</code></td><td>Read and write through GDAL.</td></tr>
+              <tr><td>PCIDSK</td><td><code>.pix</code></td><td>Read and write through GDAL.</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p>
+            The prediction is written with the driver implied by the output path, defaulting to
+            the input driver, and with a clean single-band header: georeferencing is preserved
+            while multi-band spectral metadata is dropped, because the output is a derived
+            one-band product.
+          </p>
+
+          <h3 id="ref-outputs">Output files</h3>
+          <div class="table-wrap">
+          <table>
+            <thead><tr><th>File</th><th>Contents</th></tr></thead>
+            <tbody>
+              <tr><td>Excel report</td><td>Per-model and per-property sheets with metrics, parameters, the tuning search space and the cross-validation results.</td></tr>
+              <tr><td>PDF plot report</td><td>Observed against predicted scatter plots, reflectance spectra and feature importance, one page per figure.</td></tr>
+              <tr><td><code>.joblib</code> model</td><td>The fitted model, both scalers and the complete spectral configuration.</td></tr>
+              <tr><td>Prediction image</td><td>Single-band map in the input format, background and no-data pixels written as the no-data value.</td></tr>
+              <tr><td>Resampled cube</td><td>Optional export of the harmonised image or tabular spectra, for verification.</td></tr>
+              <tr><td>Unknown predictions</td><td>Workbook of predictions for a table of samples with no measured properties.</td></tr>
+              <tr><td>Model Development Flow</td><td>The pipeline diagram, exported at 300 DPI.</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p>
+            The model file, the Excel report and the PDF from one run share a single timestamp,
+            so a folder of results never gets mismatched.
+          </p>
+
+          <h3 id="ref-model-bundle">What a saved model contains</h3>
+          <p>
+            A <code>.joblib</code> file is a dictionary. Loading it with
+            <code>joblib.load()</code> gives you everything needed to reproduce a prediction:
+          </p>
+          <div class="table-wrap">
+          <table>
+            <thead><tr><th>Key</th><th>Contents</th></tr></thead>
+            <tbody>
+              <tr><td><code>model</code></td><td>The fitted estimator.</td></tr>
+              <tr><td><code>scaler_X</code>, <code>scaler_y</code></td><td>The fitted standard scalers.</td></tr>
+              <tr><td><code>pca_component</code></td><td>The fitted PCA step, when one was used.</td></tr>
+              <tr><td><code>wavelengths</code></td><td>Every wavelength in the training file.</td></tr>
+              <tr><td><code>filtered_wavelengths</code></td><td>Wavelengths left after range and exclusion filtering.</td></tr>
+              <tr><td><code>new_wavelengths</code>, <code>new_fwhms</code></td><td>The resampled band grid, when resampling was enabled.</td></tr>
+              <tr><td><code>training_input_wavelengths</code></td><td>The grid the scaler actually expects.</td></tr>
+              <tr><td><code>resample_method</code>, <code>resample_sensor</code>, <code>resample_spacing</code>, <code>resampling_enabled</code></td><td>The full resampling configuration.</td></tr>
+              <tr><td><code>srf_table</code>, <code>custom_fwhm_table</code></td><td>Uploaded response curves or bandwidths.</td></tr>
+              <tr><td><code>exclude_ranges</code></td><td>The omitted wavelength ranges.</td></tr>
+              <tr><td><code>preprocessing</code>, <code>preprocessing_kwargs</code></td><td>The training preprocessing method and its parameters, including any fitted reference spectrum.</td></tr>
+              <tr><td><code>model_type</code>, <code>model_parameters</code></td><td>The model name and its hyperparameters.</td></tr>
+              <tr><td><code>selected_property</code></td><td>The property the model predicts.</td></tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h3 id="ref-structure">Project structure</h3>
+          <div class="table-wrap">
+          <table>
+            <thead><tr><th>Path</th><th>Contents</th></tr></thead>
+            <tbody>
+              <tr><td><code>preprocessing/</code></td><td>Spectral preprocessing, resampling, sensor presets, compositional transforms, integrity tests.</td></tr>
+              <tr><td><code>models/</code></td><td>Model construction, Optuna tuning, batch processing, metrics and plots.</td></tr>
+              <tr><td><code>validation/</code></td><td>Cross-validation strategies and derived metrics.</td></tr>
+              <tr><td><code>utils/</code></td><td>File I/O, the Data Converter, image processing, distribution reports and the Help Assistant.</td></tr>
+              <tr><td><code>gui/</code></td><td>The Tkinter window, composed from mixins (desktop and Python package).</td></tr>
+              <tr><td><code>gui_qt/</code></td><td>The Qt dock panel (QGIS plugin only).</td></tr>
+              <tr><td><code>paracuda_theme.py</code></td><td>Shared colour themes.</td></tr>
+              <tr><td><code>tools/</code></td><td><code>sync_backend.py</code> and <code>make_zip.py</code> (QGIS plugin repository).</td></tr>
+              <tr><td><code>docs/</code></td><td>This website, published with GitHub Pages.</td></tr>
+            </tbody>
+          </table>
+          </div>
+        </section>
+
+        <hr>
+
+        <!-- ------------------------- troubleshooting --------------------- -->
+        <section>
+          <h2 id="troubleshooting">Troubleshooting</h2>
+
+          <h3 id="ts-tkinter">The window does not open on Linux</h3>
+          <p>
+            Tkinter is part of the standard library but some Linux distributions package it
+            separately. On Debian or Ubuntu:
+          </p>
+<pre><code class="language-bash">sudo apt install python3-tk</code></pre>
+
+          <h3 id="ts-qgis-deps">QGIS reports a missing package</h3>
+          <p>
+            Use <strong>Tools &rarr; Install Python dependencies</strong> inside the plugin. It
+            installs scikit-learn, joblib, optuna, xgboost, rasterio and spectral into the QGIS
+            Python environment with <code>pip --user</code>. If your QGIS install is managed and
+            <code>pip</code> is blocked, install them into the environment QGIS uses instead.
+          </p>
+
+          <h3 id="ts-blank-prediction">The prediction image looks empty</h3>
+          <p>
+            This is almost always a scaling problem. Products that store integer digital
+            numbers carry a gain and offset in the header, for example
+            <code>data gain values = 0.0001</code> so a value of 3000 means a reflectance of
+            0.3. PARACUDA-NG applies that automatically, but if a header is missing or wrong,
+            the model sees values far outside its training range and every pixel ends up masked
+            or nonsensical. Check the header, then export the resampled cube and inspect a few
+            spectra.
+          </p>
+
+          <h3 id="ts-photo">A photo is rejected as an image cube</h3>
+          <p>
+            JPEG and PNG photos are not geospatial rasters and are refused deliberately. Load a
+            multispectral or hyperspectral cube: GeoTIFF, ENVI with a <code>.hdr</code>,
+            <code>.img</code>, <code>.bil</code>, <code>.bip</code>, <code>.bsq</code> or
+            <code>.dat</code>.
+          </p>
+
+          <h3 id="ts-components">A component count error during cross-validation</h3>
+          <p>
+            PLS and PCA require the component count to be no larger than the smallest training
+            fold. A setting that is valid on the full dataset can still overflow an individual
+            fold. PARACUDA-NG clamps the count to the smallest fold automatically, so if you
+            still see an error, reduce the fold count or the component count.
+          </p>
+
+          <h3 id="ts-too-good">The score looks too good</h3>
+          <p>
+            Run <strong>Check Spectral Integrity</strong>. If shuffled labels reach a similar
+            score, the model is fitting noise rather than spectral information. Also read the
+            overfitting assessment printed next to the metrics: a large gap between the training
+            and test R squared is the usual warning sign.
+          </p>
+
+          <h3 id="ts-slow">Loading a large workbook is slow</h3>
+          <p>
+            Install the optional fast reader. It parses large spectral workbooks several times
+            faster, and PARACUDA-NG falls back to the default engine when it is absent.
+          </p>
+<pre><code class="language-bash">pip install "paracuda-ng[fast]"</code></pre>
+
+          <h3 id="ts-memory">A hyperspectral scene runs out of memory</h3>
+          <p>
+            Use the chunked prediction path shown in
+            <a href="#py-image">Apply a saved model to an image cube</a>, pass
+            <code>return_cube=False</code> unless you actually need the resampled cube, and
+            lower <code>chunk_pixels</code> if memory is very tight.
+          </p>
+        </section>
+
+        <hr>
+
+        <!-- ------------------------- project status ---------------------- -->
+        <section>
+          <h2 id="project-status">Project status</h2>
+          <p>
+            PARACUDA-NG 1.0.0 is stable and in active development. The desktop application, the
+            Python package and the QGIS plugin are released together and share one scientific
+            engine, so a fix in one reaches all three.
+          </p>
+
+          <h3 id="status-ships">What ships today</h3>
+          <ul>
+            <li>The full seven-step wizard in Tkinter and in Qt6, with the live Model Development
+              Flow diagram exportable at 300 DPI.</li>
+            <li>Excel, CSV and OpenDocument input, with wavelength unit and spectral domain
+              auto-detection, and a converter for arbitrary instrument layouts.</li>
+            <li>Ten preprocessing methods, seven resampling methods, eleven sensor presets,
+              custom FWHM and SRF upload, band binning and exclusion presets.</li>
+            <li>Eleven regression models plus a neural network and optional PCA, single or batch
+              runs, Find Best Preprocessing, Optuna tuning and component optimisation.</li>
+            <li>K-Fold, Leave-One-Out and Leave-P-Out cross-validation with overfitting
+              detection and an automatic best-model recommendation.</li>
+            <li>Compositional CLR, ALR and ILR modelling for parts that sum to a fixed total.</li>
+            <li>Prediction on unknown tables, on image cubes in five geospatial formats, and on
+              QGIS raster layers with the result added back to the map.</li>
+            <li>Check Spectral Integrity, Spectral Harmonization, Data Distribution and a
+              searchable Help Assistant.</li>
+            <li>Excel and PDF reporting with a shared run timestamp, and a portable
+              <code>.joblib</code> model format.</li>
+            <li>Five colour themes across all three distributions.</li>
+          </ul>
+
+          <h3 id="status-recent">Recently added in 1.0.0</h3>
+          <ul>
+            <li>First QGIS plugin release: the full wizard as a native dockable Qt6 panel for
+              QGIS 3.22 and QGIS 4.</li>
+            <li>Apply a trained model to a loaded QGIS raster layer and get the prediction back
+              as a new layer with a matching colour map.</li>
+            <li>Sensor resampling for Sentinel-2, Landsat 5, 7, 8 and 9, EnMAP, EMIT, PRISMA,
+              DESIS, PlanetScope and VENUS, plus custom FWHM and SRF grids and band binning.</li>
+            <li>Data loading moved off the interface thread behind a progress dialog, using the
+              fastest available reader, roughly halving the time to open a large spreadsheet.</li>
+            <li>Data Distribution now inspects one property at a time from a drop-down, with a
+              histogram, boxplot, normal Q-Q plot, cumulative distribution and findings.</li>
+            <li>Noisy-edge and water-band exclusion presets follow the selected spectral domain
+              (VSWIR, LWIR or both) and merge into the omit field instead of stacking
+              duplicates.</li>
+            <li>Automatic first-run installation of the required Python packages inside QGIS.</li>
+          </ul>
+
+          <h3 id="status-contribute">Issues and contributions</h3>
+          <p>
+            Bug reports and feature requests for the desktop application and the Python
+            package go to the
+            <a href="https://github.com/sharadgupta27/paracuda-ng/issues" target="_blank" rel="noopener">paracuda-ng tracker</a>,
+            and anything specific to the plugin to the
+            <a href="https://github.com/sharadgupta27/paracuda-qgis/issues" target="_blank" rel="noopener">paracuda-qgis tracker</a>.
+            The code is MIT licensed, so pull requests, forks and derivative work are all
+            welcome.
+          </p>
+        </section>
+
+        <hr>
+
+        <!-- ------------------------- citation ---------------------------- -->
+        <section>
+          <h2 id="citation">Citation and license</h2>
+
+          <h3 id="cite-software">Citing PARACUDA-NG</h3>
+          <p>If you use this software in your research, please cite it:</p>
+<pre><code>@software{ParacudaNG2026,
+  author = {Sharad Kumar Gupta},
+  title  = {PARACUDA-NG: An Open-Source Machine Learning tool for Spectroscopic Analysis},
+  year   = {2026},
+  url    = {https://github.com/sharadgupta27/paracuda-ng}
+}</code></pre>
+
+          <h3 id="cite-ack">Acknowledgement</h3>
+          <p>
+            PARACUDA-NG takes its inspiration from the PARACUDA tool (based on Excel) developed by Schwartz et al. (2013) and  
+            and PARACUDA II (MATLAB) by Carmon and Ben-Dor (2017).
+          </p>
+          <blockquote>
+            <p>
+              1. Schwartz, G. (2013). <em>Reflectance Spectroscopy as a Rapid Tool for
+              Quantitative Mapping of Hydrocarbons Soil Contamination</em> (PhD
+              dissertation). The Porter School of Environmental Studies, Tel Aviv
+              University. Supervised by Prof. Eyal Ben-Dor and Dr. Gil Eshel.
+            </p>
+          </blockquote>
+
+          <blockquote>
+            <p>
+              2. Carmon, N., and Ben-Dor, E. (2017). An advanced analytical approach for
+              spectral-based modelling of soil properties. <em>International Journal of Emerging
+              Technologies and Advanced Engineering</em>, 7, 90-97.
+            </p>
+          </blockquote>
+
+
+          <h3 id="cite-license">License</h3>
+          <p>
+            PARACUDA-NG is released under the MIT License in all three distributions. Commercial
+            use is permitted; keeping the copyright notice is all that is required.
+          </p>
+
+          <h3 id="cite-contact">Contact</h3>
+          <p>
+            Sharad Kumar Gupta, <a href="mailto:sharadgupta27@gmail.com">sharadgupta27@gmail.com</a>.
+            For collaboration or support enquiries, please get in touch.
+          </p>
+        </section>
+
+      </article>
+    </div>
+  </div>
+</main>
+
+<footer class="md-footer">
+  <div class="md-footer__inner md-grid">
+    <div>
+      <p style="margin:0 0 0.3rem"><strong>PARACUDA-NG</strong> 1.0.0, MIT licensed. Copyright <span data-year>2026</span> Sharad Kumar Gupta.</p>
+      <p style="margin:0">PARAmetric CUbe Data Analysis - Next Generation</p>
+    </div>
+    <div class="md-footer__links">
+      <a href="https://github.com/sharadgupta27/paracuda-ng" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.03A9.58 9.58 0 0 1 12 6.8c.85 0 1.71.11 2.51.33 1.91-1.3 2.75-1.03 2.75-1.03.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85V21c0 .27.16.59.67.5A10 10 0 0 0 22 12 10 10 0 0 0 12 2Z"/></svg>
+        GitHub
+      </a>
+      <a href="https://pypi.org/project/paracuda-ng/" target="_blank" rel="noopener">PyPI</a>
+      <a href="https://github.com/sharadgupta27/paracuda-ng/issues" target="_blank" rel="noopener">Issues</a>
+      <a class="md-top" href="#top">Back to top</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>
