@@ -192,10 +192,6 @@
               through a guided seven-step wizard, so no code is required, and the same
               scientific engine is importable when you do want to script it.
             </p>
-            <p class="hero__lead" style="margin-top:0.8rem">
-              PARACUDA-NG runs where you already work: as a desktop application, as the
-              <code>paracuda-ng</code> Python package, and as a native dockable QGIS plugin.
-            </p>
             <div class="hero__actions">
               <a class="md-button md-button--primary" href="#getting-started">Get started</a>
               <a class="md-button" href="#python-package">Python package</a>
@@ -203,17 +199,27 @@
               <a class="md-button" href="https://github.com/sharadgupta27/paracuda-ng" target="_blank" rel="noopener">View on GitHub</a>
             </div>
           </div>
-          <figure class="hero__media">
-            <img src="assets/screenshot_paracuda.png" alt="The PARACUDA-NG main window showing the seven-step wizard, the data panel and the live Model Development Flow diagram." loading="lazy">
-            <figcaption>The seven-step wizard, the live status log and the Model Development Flow diagram.</figcaption>
-          </figure>
+          <!-- The screenshot is wide and short, so it is pinned to the top of
+               this column and the "runs where you already work" paragraph sits
+               under it - otherwise the hero centres a short image against a
+               tall text column and leaves a band of empty space. -->
+          <div class="hero__aside">
+            <figure class="hero__media">
+              <img src="assets/screenshot_paracuda.png" alt="The PARACUDA-NG main window showing the seven-step wizard, the data panel and the live Model Development Flow diagram." loading="lazy">
+              <figcaption>The seven-step wizard, the live status log and the Model Development Flow diagram.</figcaption>
+            </figure>
+            <p class="hero__note">
+              PARACUDA-NG runs where you already work: as a desktop application, as the
+              <code>paracuda-ng</code> Python package, and as a native dockable QGIS plugin.
+            </p>
+          </div>
         </div>
 
         <ul class="badges">
           <li>Version 1.0.0</li>
           <li>MIT licensed</li>
           <li>Python 3.10 and newer</li>
-          <li>QGIS 3.22 and newer, including QGIS 4 on Qt6</li>
+          <li>QGIS 3.30 and newer, including QGIS 4 on Qt6</li>
           <li>Windows, macOS and Linux</li>
           <li>11 regression models</li>
           <li>10 preprocessing methods</li>
@@ -490,7 +496,7 @@ paracuda-converter     # the standalone Data Converter</code></pre>
             </div>
 
             <div class="tabbed__panel" role="tabpanel" hidden>
-              <p>Requires QGIS 3.22 or newer. QGIS 4 on Qt6 is supported.</p>
+              <p>Requires QGIS 3.30 or newer. QGIS 4 on Qt6 is supported.</p>
               <ol>
                 <li>Build the ZIP from the root of the
                   <a href="https://github.com/sharadgupta27/paracuda-qgis" target="_blank" rel="noopener">paracuda-qgis</a>
@@ -1046,7 +1052,7 @@ X_harmonised = apply_transfer_function(X_new, pls, scaler_s, scaler_t)</code></p
 
           <h3 id="qgis-requirements">Requirements</h3>
           <ul>
-            <li>QGIS 3.22 or newer. QGIS 4 on Qt6 is supported.</li>
+            <li>QGIS 3.30 or newer. QGIS 4 on Qt6 is supported.</li>
             <li>Six Python packages QGIS does not ship: scikit-learn, joblib, optuna, xgboost,
               rasterio and spectral.</li>
           </ul>
@@ -1549,7 +1555,7 @@ python paracuda.py</code></pre>
           <h3 id="status-recent">Recently added in 1.0.0</h3>
           <ul>
             <li>First QGIS plugin release: the full wizard as a native dockable Qt6 panel for
-              QGIS 3.22 and QGIS 4.</li>
+              QGIS 3.30 and QGIS 4.</li>
             <li>Apply a trained model to a loaded QGIS raster layer and get the prediction back
               as a new layer with a matching colour map.</li>
             <li>Sensor resampling for Sentinel-2, Landsat 5, 7, 8 and 9, EnMAP, EMIT, PRISMA,

@@ -704,7 +704,9 @@ img {
   display: grid;
   gap: 2rem;
   grid-template-columns: minmax(0, 1fr);
-  align-items: center;
+  /* Top-aligned, not centred: the screenshot is far shorter than the text
+     column, and centring it left a large empty band above and below. */
+  align-items: start;
   margin: 1rem 0 2.5rem;
 }
 
@@ -749,6 +751,18 @@ img {
   flex-wrap: wrap;
   gap: 0.6rem;
   margin-top: 1.3rem;
+}
+
+.hero__aside {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.hero__note {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.95rem;
+  margin: 0;
 }
 
 .hero__media {
