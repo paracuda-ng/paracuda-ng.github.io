@@ -520,9 +520,11 @@ paracuda-converter     # the standalone Data Converter</code></pre>
 cd paracuda-ng
 pip install -r requirements.txt
 python paracuda.py</code></pre>
-              <p>On Windows, <code>run_paracuda.bat</code> finds your Conda installation,
-              creates the <code>paracuda</code> environment on first use, and launches the
-              application. The only prerequisite is Miniforge, Miniconda or Anaconda.</p>
+              <p>Or skip all of that: <code>run_paracuda.bat</code> on Windows and
+              <code>run_paracuda.sh</code> on Linux and macOS set up the
+              <code>paracuda</code> environment on first use and launch the application.
+              There is no prerequisite - if the machine has no suitable Python, the
+              launcher installs one for your user account without administrator rights.</p>
             </div>
           </div>
 
@@ -1219,17 +1221,26 @@ for name, layer in QgsProject.instance().mapLayers().items():
           <h3 id="desktop-launcher">One-click launcher</h3>
           <p>
             If installing packages from a terminal is not how you want to spend your day,
-            double-click <code>run_paracuda.bat</code>. It:
+            double-click <code>run_paracuda.bat</code> on Windows, or run
+            <code>./run_paracuda.sh</code> on Linux and macOS (<code>chmod +x
+            run_paracuda.sh</code> once first). Either one:
           </p>
           <ol>
-            <li>Finds your Conda installation (Miniforge, Miniconda or Anaconda).</li>
-            <li>Creates the <code>paracuda</code> environment and installs everything from
-              <code>requirements.txt</code> the first time, which takes a few minutes.</li>
-            <li>Activates the environment and launches PARACUDA-NG.</li>
+            <li>Finds your Conda installation (Miniforge, Miniconda or Anaconda) and creates
+              the <code>paracuda</code> environment on Python 3.14.</li>
+            <li>Falls back to any Python 3.10 or newer already on the machine, building a
+              local <code>.venv</code> beside the launcher.</li>
+            <li>Installs a Python for your user account if there is none - the python.org
+              installer on Windows, Miniforge into <code>~/miniforge3</code> on Linux and
+              macOS. No administrator or root access is needed.</li>
+            <li>Installs everything from <code>requirements.txt</code> the first time, which
+              takes a few minutes, then launches PARACUDA-NG.</li>
           </ol>
           <p>
-            The only prerequisite is a Conda installation. If Conda cannot be found or setup
-            fails, the launcher prints clear guidance and stays open so you can read it.
+            There is no prerequisite beyond an internet connection for the first run. If
+            setup fails, the launcher prints clear guidance and stays open so you can read
+            it - on Debian and Ubuntu it names the exact <code>sudo apt install</code> line
+            when only <code>python3-tk</code> or <code>python3-venv</code> is missing.
           </p>
 
           <h3 id="desktop-manual">Manual install</h3>
