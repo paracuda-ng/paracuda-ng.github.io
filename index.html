@@ -106,6 +106,7 @@
           <li><a class="md-nav__link" href="#step-validate">5. Validate</a></li>
           <li><a class="md-nav__link" href="#step-execution">6. Execution</a></li>
           <li><a class="md-nav__link" href="#step-apply">7. Apply</a></li>
+          <li><a class="md-nav__link" href="#uncertainty">Uncertainty analysis</a></li>
           <li><a class="md-nav__link" href="#data-converter">Data Converter</a></li>
           <li><a class="md-nav__link" href="#extra-tools">Extra tools</a></li>
 
@@ -122,6 +123,7 @@
           <li><a class="md-nav__link" href="#ref-resampling">Resampling methods</a></li>
           <li><a class="md-nav__link" href="#ref-sensors">Sensor band presets</a></li>
           <li><a class="md-nav__link" href="#ref-metrics">Metrics</a></li>
+          <li><a class="md-nav__link" href="#ref-unc-metrics">Uncertainty metrics</a></li>
           <li><a class="md-nav__link" href="#ref-formats">Image formats</a></li>
           <li><a class="md-nav__link" href="#ref-outputs">Output files</a></li>
           <li><a class="md-nav__link" href="#ref-model-bundle">Saved model contents</a></li>
@@ -145,6 +147,7 @@
           <li><a class="md-nav__link" href="#getting-started">Getting started</a></li>
           <li><a class="md-nav__link" href="#input-data">Input data layout</a></li>
           <li><a class="md-nav__link" href="#workflow">The seven-step workflow</a></li>
+          <li><a class="md-nav__link" href="#uncertainty">Uncertainty analysis</a></li>
           <li><a class="md-nav__link" href="#data-converter">Data Converter</a></li>
           <li><a class="md-nav__link" href="#extra-tools">Extra tools</a></li>
           <li><a class="md-nav__link" href="#python-package">Python package</a></li>
@@ -216,7 +219,7 @@
         </div>
 
         <ul class="badges">
-          <li>Version 1.0.0</li>
+          <li>Version 1.0.2</li>
           <li>MIT licensed</li>
           <li>Python 3.10 and newer</li>
           <li>QGIS 3.30 and newer, including QGIS 4 on Qt6</li>
@@ -225,14 +228,16 @@
           <li>10 preprocessing methods</li>
           <li>7 resampling methods</li>
           <li>11 sensor presets</li>
+          <li>5 uncertainty methods</li>
         </ul>
 
         <!-- ------------------------- what it does ------------------------ -->
         <section class="feature-list">
           <h2 id="what-it-does">What PARACUDA-NG does today</h2>
           <p>
-            Everything below ships in version 1.0.0 and behaves the same in all three
-            distributions, because they share one scientific engine.
+            Everything below behaves the same in all three distributions, because they
+            share one scientific engine. Uncertainty analysis and hover tooltips arrive in
+            the release after 1.0.2; the rest ships today.
           </p>
 
           <div class="feature-step">
@@ -349,6 +354,22 @@
           </div>
 
           <div class="feature-step">
+            <h3 id="f-uncertainty">Prediction intervals you can check</h3>
+            <p>
+              Every prediction can carry a range that should contain the true value at 90,
+              95 or 99 percent confidence. Five interval methods are available: leverage
+              (ASTM E1655), Faber-Kowalski error propagation, bootstrap, quantile regression
+              forest and conformal prediction. The ranges are tested on the training,
+              cross-validation and test sets with coverage (PICP), width, PIT histograms and
+              CRPS. The fitted interval model is saved with the model, so new spectra and
+              every image pixel get an expected range, plus a flag when the spectrum lies
+              outside the calibration domain. An optional step propagates the uncertainty to
+              soil organic carbon stock.
+              See <a href="#uncertainty">Uncertainty analysis</a>.
+            </p>
+          </div>
+
+          <div class="feature-step">
             <h3 id="f-batch">Batch mode with a best-model recommendation</h3>
             <p>
               Select several properties and several models and PARACUDA-NG trains the whole
@@ -400,6 +421,9 @@
               in-app Help Assistant covering 27 topics from loading data to interpreting
               results, and a single <code>.joblib</code> model format that is interchangeable
               between the desktop application, the Python package and the QGIS plugin.
+              Hover over any button, checkbox, drop-down or field for a short explanation of
+              what it does. The tooltip texts live in one shared table, so the Tkinter and Qt
+              interfaces explain every control in the same words.
             </p>
           </div>
         </section>
@@ -459,6 +483,7 @@
               <tr><td>Predict on a file on disk</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
               <tr><td>Predict on a loaded QGIS layer</td><td>No</td><td>No</td><td>Yes</td></tr>
               <tr><td>Result added back to the map</td><td>No</td><td>No</td><td>Yes, with a colour map</td></tr>
+              <tr><td>Prediction intervals and uncertainty maps</td><td>Yes</td><td>Yes</td><td>Yes, added to the map</td></tr>
               <tr><td>Model file format</td><td colspan="3"><code>.joblib</code>, interchangeable across all three</td></tr>
               <tr><td>Install command</td><td>Clone plus <code>requirements.txt</code></td><td><code>pip install paracuda-ng</code></td><td>Install from ZIP</td></tr>
             </tbody>
@@ -645,6 +670,13 @@ python paracuda.py</code></pre>
             clay stays in percent clay. Component counts are clamped to the smallest training
             fold so a valid full-data setting cannot make individual folds fail.
           </p>
+          <p>
+            The <strong>Uncertainty Analysis</strong> group is on this tab too. Tick
+            <em>Estimate prediction uncertainty</em>, choose a confidence level and one or more
+            interval methods, and optionally give the reference-lab error and the instrument
+            noise. <strong>How does this work?</strong> explains each option in plain
+            language. See <a href="#uncertainty">Uncertainty analysis</a>.
+          </p>
 
           <h3 id="step-execution">Step 6. Execution</h3>
           <p>
@@ -656,6 +688,8 @@ python paracuda.py</code></pre>
             <li>A multi-page PDF with observed against predicted scatter plots, reflectance
               spectra and feature-importance charts.</li>
             <li>A best-model recommendation per property, with an overfitting assessment.</li>
+            <li>When uncertainty analysis is on: <code>Unc_...</code> sheets in the workbook,
+              extra uncertainty pages in the PDF, and the key figures on the Visualization tab.</li>
             <li>A saved <code>.joblib</code> model. The model file, the Excel report and the PDF
               share one run timestamp so they stay matched.</li>
           </ul>
@@ -670,11 +704,187 @@ python paracuda.py</code></pre>
               the prediction is added back to the map with a matching colour map.</li>
             <li><strong>Export the resampled cube</strong> to confirm that harmonisation
               produced sensible spectra before you trust the prediction.</li>
+            <li><strong>Add prediction intervals</strong> (tables) and <strong>Create
+              uncertainty maps</strong> (images) attach an expected range to every sample or
+              pixel, when the model was trained with uncertainty analysis. A status line under
+              Model Management says whether the loaded model can do this.</li>
+            <li><strong>SOC Stock (optional)</strong> converts a soil organic carbon
+              prediction in percent to a stock in Mg C/ha and carries the uncertainty through.</li>
           </ul>
           <p>
             The saved model carries its own band grid, exclusion ranges, resampling
             configuration and preprocessing parameters, so incoming data is aligned to exactly
             what the model was trained on, whatever grid it arrives on.
+          </p>
+        </section>
+
+        <hr>
+
+        <!-- ------------------------- uncertainty ------------------------- -->
+        <section>
+          <h2 id="uncertainty">Uncertainty analysis</h2>
+          <div class="admonition">
+            <p class="admonition-title">Coming in the next release</p>
+            <p>
+              Uncertainty analysis lands in the desktop application, the Python package and
+              the QGIS plugin together, in the release after 1.0.2.
+            </p>
+          </div>
+          <p>
+            A single number such as 31.5 percent clay hides how much you can trust it. With
+            uncertainty analysis switched on, every prediction comes with a
+            <em>prediction interval</em>: a range that should contain the true value at the
+            confidence you chose. At 95 percent, 95 of every 100 true values should fall inside
+            their ranges. A narrow range means a reliable prediction. The method follows the
+            IUPAC technical report on multivariate calibration (Olivieri et al., 2006) and works
+            in five layers, plus a sixth for carbon stock.
+          </p>
+
+          <h3 id="unc-settings">Settings in Step 5</h3>
+          <div class="table-wrap">
+          <table>
+            <thead><tr><th>Setting</th><th>Default</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Estimate prediction uncertainty</td><td>On</td><td>Runs the analysis after every model fit.</td></tr>
+              <tr><td>Confidence level</td><td>0.95</td><td>0.90, 0.95 or 0.99. The share of true values each range should contain.</td></tr>
+              <tr><td>Interval methods</td><td>Leverage, Faber-Kowalski, Conformal</td><td>One or more of the five methods below. Pick several to compare them side by side.</td></tr>
+              <tr><td>Bootstrap refits</td><td>50</td><td>How many refits the bootstrap method makes (10 to 1000).</td></tr>
+              <tr><td>Lab (reference) error &sigma;</td><td>blank</td><td>The standard deviation of the laboratory method, in property units. Blank means unknown and no correction.</td></tr>
+              <tr><td>Instrument noise &sigma;</td><td>Auto</td><td>Spectral noise in reflectance units for Faber-Kowalski. <em>Auto</em> estimates it from the training spectra.</td></tr>
+              <tr><td>Noise draws</td><td>20</td><td>Monte Carlo draws used to push the instrument noise through preprocessing and the model.</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p>
+            The typical error <em>s<sub>e</sub></em> comes from out-of-fold cross-validation
+            residuals (RMSECV), never from the calibration error, which is biased low. The fold
+            count follows your Step 5 choice: K-Fold uses its K, and Leave-One-Out is used as
+            such for up to 100 training samples and becomes 10-fold above that.
+          </p>
+
+          <h3 id="unc-methods">Interval methods</h3>
+          <div class="table-wrap">
+          <table>
+            <thead><tr><th>Method</th><th>How it works</th><th>Width</th><th>Cost</th></tr></thead>
+            <tbody>
+              <tr><td>Leverage (ASTM E1655)</td><td>&#375; &plusmn; t&middot;s<sub>e</sub>&middot;&radic;(1+h). Samples far from the centre of the calibration spectra (high leverage <em>h</em>) get wider ranges. Native for PLS-R and PCR; other models use a PCA space of the spectra.</td><td>Per sample</td><td>Fast</td></tr>
+              <tr><td>Faber-Kowalski</td><td>Adds the error sources: a calibration term (h&middot;s<sub>e</sub>&sup2;), instrument noise pushed through preprocessing and the model, the reference-lab error and the remaining model error.</td><td>Per sample</td><td>Fast</td></tr>
+              <tr><td>Bootstrap / bagging</td><td>Refits the model on resampled training sets. The spread of their predictions plus the out-of-bag residual variance gives the range. Works for any model.</td><td>Per sample</td><td>One refit per draw; the refits are stored in the model file</td></tr>
+              <tr><td>Quantile regression forest</td><td>Meinshausen (2006). A Random Forest gives conditional quantiles directly; for other models a forest is trained on the cross-validated errors. Ranges can be asymmetric.</td><td>Per sample</td><td>Moderate</td></tr>
+              <tr><td>Conformal prediction</td><td>Lei et al. (2018). The half-width is a quantile of the absolute cross-validated errors. Guarantees the chosen coverage on average without assuming normal errors.</td><td>Same for all</td><td>Fast</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p>
+            Where one number is needed, as for an image &sigma; map or the stock propagation,
+            the <em>primary</em> method is used, in this order of preference: Faber-Kowalski,
+            Leverage, Bootstrap, Conformal, Quantile forest.
+          </p>
+
+          <h3 id="unc-training">What the run reports</h3>
+          <p>
+            During training the true values are known for the training set, the
+            cross-validation folds and the independent test set, so PARACUDA-NG can check how
+            honest the ranges are.
+          </p>
+          <ul>
+            <li><strong>Accuracy per set</strong>: bias, RMSEP, SEP, RPIQ and Lin's concordance
+              coefficient &rho;<sub>c</sub>, with the RMSEP&sup2; = SEP&sup2; + bias&sup2;
+              decomposition. When you supply the lab error, the &ldquo;true&rdquo; RMSEP is
+              also reported, with the reference noise removed
+              (MSEP<sub>true</sub> &asymp; MSEP<sub>apparent</sub> &minus; &sigma;&sup2;<sub>ref</sub>).</li>
+            <li><strong>Coverage (PICP)</strong>: the share of true values inside their ranges.
+              Close to the confidence level means honest; lower means the ranges are too
+              narrow.</li>
+            <li><strong>Mean width (MPIW)</strong>: narrower is better at equal coverage.</li>
+            <li><strong>PIT histogram</strong>: flat means well calibrated, a U shape means the
+              ranges are too narrow, a hump means they are too wide.</li>
+            <li><strong>Quantile coverage curve</strong>: coverage from 10 to 99 percent; the
+              diagonal is ideal.</li>
+            <li><strong>CRPS and interval score</strong>: single numbers that reward ranges that
+              are both honest and narrow.</li>
+            <li><strong>Faber-Kowalski budget</strong>: how much of the variance each error
+              source contributes.</li>
+          </ul>
+          <div class="admonition admonition--tip">
+            <p class="admonition-title">Judge the intervals on the test set</p>
+            <p>
+              Training coverage is in-sample and optimistic. Cross-validation coverage is
+              partly built in, because the ranges are learned from the cross-validation
+              errors. The test set is the independent check.
+            </p>
+          </div>
+
+          <h3 id="unc-predict">Intervals on new data</h3>
+          <p>
+            New samples have no reference values, so their actual error cannot be measured.
+            Instead, the error behaviour learned in training is carried over to each sample:
+            the typical error <em>s<sub>e</sub></em>, how unusual the new spectrum is (its
+            leverage), the disagreement between bootstrap models or the error spread of similar
+            training samples, and the instrument and lab errors you supplied. The result is an
+            <em>expected</em> uncertainty per sample or pixel. Its reliability was shown on the
+            test set.
+          </p>
+          <ul>
+            <li><strong>Tables</strong>: an <code>Uncertainty</code> sheet is added to the
+              prediction workbook, with the lower and upper bound and &sigma; for each method,
+              the leverage, and an <em>Outside domain</em> flag. A matching
+              <code>_uncertainty.pdf</code> report is written beside it.</li>
+            <li><strong>Reference values in the file</strong>: if the prediction file also holds
+              the property column, with at least five values, the ranges are checked against it
+              automatically and written to <code>Ref_Unc_...</code> sheets.</li>
+            <li><strong>Images</strong>: a multi-band <code>&lt;output&gt;_uncertainty</code>
+              raster is written in the same format as the prediction, with leverage, an
+              outside-domain mask and lower, upper and &sigma; bands per method. A
+              <code>_uncertainty_report.pdf</code> holds the maps. In QGIS the raster is added
+              to the project as a layer.</li>
+          </ul>
+          <p>
+            A pixel or sample is flagged <em>outside the calibration domain</em> when its
+            leverage exceeds three times the average training leverage (the ASTM E1655 limit
+            <em>h*</em>). Treat those predictions with caution. A model saved without
+            uncertainty analysis still predicts normally, just without ranges.
+          </p>
+
+          <h3 id="unc-stock">Soil organic carbon stock</h3>
+          <p>
+            For a soil organic carbon model in percent, the optional <strong>SOC Stock</strong>
+            group in Step 7 converts each prediction to a stock:
+          </p>
+<pre><code>Stock (Mg C/ha) = SOC (%) &times; bulk density (g/cm&sup3;) &times; depth (cm) &times; (1 &minus; coarse fraction)</code></pre>
+          <p>
+            Enter bulk density, depth and coarse fraction, each with its uncertainty (defaults
+            1.30 &plusmn; 0.10 g/cm&sup3;, 30 &plusmn; 1 cm and 0 &plusmn; 0). The prediction
+            uncertainty and the input uncertainties are combined with the GUM law of
+            propagation (JCGM 100, expanded uncertainty at k = 2) and checked with a JCGM 101
+            Monte Carlo simulation. An uncertainty budget shows which input dominates. For the
+            mean over all samples or pixels, results are given twice: with model errors treated
+            as independent, and as fully correlated. Bulk density, depth and coarse fraction are
+            shared values, so their uncertainty does not average out. Tables get stock columns
+            and a <code>Stock_Summary</code> sheet; images get <code>soc_stock</code> and
+            <code>soc_stock_U_k2</code> bands.
+          </p>
+
+          <h3 id="unc-choose">Choosing methods</h3>
+          <ul>
+            <li><strong>Leverage and Faber-Kowalski</strong>: fast and sample-specific, the
+              standard choice for PLS-R.</li>
+            <li><strong>Conformal</strong>: fast, with guaranteed average coverage, but the same
+              width for every sample.</li>
+            <li><strong>Bootstrap</strong>: works for any model, but slower and gives a larger
+              model file.</li>
+            <li><strong>Quantile forest</strong>: adapts to where errors are large; works for any
+              model.</li>
+          </ul>
+          <p>
+            Batch runs and Find Best Preprocessing analyse only the models they keep, so the
+            screening fits stay fast.
+          </p>
+          <p>
+            <strong>Key references</strong>: Olivieri et al. (2006), IUPAC; ASTM E1655; Faber
+            and Kowalski (1997); Fearn (2002); Bellon-Maurel et al. (2010) for RPIQ; Lin (1989);
+            Meinshausen (2006); Lei et al. (2018); Malone et al. (2011) for PICP; Schmidinger and
+            Heuvelink (2023); JCGM 100 and JCGM 101 (GUM).
           </p>
         </section>
 
@@ -753,7 +963,7 @@ python utils/data_converter.py                  # from the desktop checkout</cod
           <h2 id="python-package">Python package</h2>
           <p>
             Distribution name <code>paracuda-ng</code>, import name <code>paracuda_ng</code>,
-            version 1.0.0, MIT licensed.
+            version 1.0.2, MIT licensed.
           </p>
 
           <h3 id="py-install">Installation</h3>
@@ -1023,6 +1233,56 @@ pred, shape, valid_mask, cube, target_wl = process_image_for_prediction(
     predict_fn=predict_chunk,
 )</code></pre>
 
+          <h3 id="py-uncertainty">Prediction intervals</h3>
+          <p>
+            Continuing from <a href="#py-train">Train a model and score it</a>. The analysis
+            needs the scaled spectra and, for the instrument-noise term, the spectra before
+            preprocessing. Values come back in the property's original units.
+          </p>
+<pre><code class="language-python">from paracuda_ng.validation.uncertainty import (
+    run_uncertainty_analysis, report_lines, prediction_frame,
+)
+
+result = run_uncertainty_analysis(
+    model, scaler_X, scaler_y,
+    scaler_X.transform(X_train), y_train,
+    scaler_X.transform(X_test), y_test,
+    model_type="PLS-R",
+    X_train_raw=X_train, X_test_raw=X_test,      # spectra before preprocessing
+    preprocessing="No Preprocessing",
+    settings={"methods": ["leverage", "fk", "conformal"], "level": 0.95},
+)
+
+print("\n".join(report_lines(result, "PLS-R - Clay")))
+test = result["fom"]["Test"]
+print(test["rmsep"], test["sep"], test["bias"], test["rpiq"], test["ccc"])
+
+# The fitted interval model is picklable. The window saves it under the
+# "uncertainty" key of the .joblib bundle.
+um = result["predictor"]
+X_new = paracuda_ng.load_sample("unknown")[wl_cols].to_numpy(dtype=float)
+pred = um.predict(scaler_X.transform(X_new), X_raw=X_new)
+
+table = prediction_frame(pred, um)     # Predicted, Leverage h, Outside domain,
+print(table.head())                    # lower / upper / sigma per method</code></pre>
+          <p>
+            Method keys are <code>leverage</code>, <code>fk</code>, <code>bootstrap</code>,
+            <code>qrf</code> and <code>conformal</code>. The other settings are
+            <code>n_boot</code>, <code>sigma_ref</code>, <code>sigma_x</code>,
+            <code>mc_draws</code>, <code>cv_folds</code> and <code>seed</code>. To carry the
+            uncertainty through to a carbon stock:
+          </p>
+<pre><code class="language-python">from paracuda_ng.validation.uncertainty import (
+    primary_sigma, propagate_stock, stock_summary_lines, stock_frame,
+)
+
+_, sigma = primary_sigma(pred, um)            # use a model of OC in percent here
+stock = propagate_stock(pred["pred"], sigma,
+                        {"bd": 1.35, "u_bd": 0.08, "depth": 30, "u_depth": 1,
+                         "coarse": 0.1, "u_coarse": 0.02})
+print("\n".join(stock_summary_lines(stock)))   # GUM k=2, Monte Carlo 95 %, budget
+stock_frame(stock)                             # per-sample stock table</code></pre>
+
           <h3 id="py-integrity">Run the integrity tests</h3>
 <pre><code class="language-python">from paracuda_ng.preprocessing.data_processing import (
     randomize_label_test, mix_spectra_integrity_check,
@@ -1113,7 +1373,8 @@ export PARACUDA_DESKTOP=/path/to/paracuda-ng    # or set it in the environment</
               <h4>Apply</h4>
               <p>Save the model, then predict on a raster layer that is already loaded in the
                 project. The prediction is added back to the map as a new layer with a matching
-                colour map.</p>
+                colour map. With <em>Create uncertainty maps</em> ticked, the uncertainty
+                raster is added as a layer too.</p>
             </li>
           </ol>
 
@@ -1373,6 +1634,29 @@ python paracuda.py</code></pre>
             cross-validated R squared.
           </p>
 
+          <h3 id="ref-unc-metrics">Uncertainty metrics</h3>
+          <p>Reported per set (training, cross-validation, test) when uncertainty analysis is on.</p>
+          <div class="table-wrap">
+          <table>
+            <thead><tr><th>Metric</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td>Bias</td><td>Mean of predicted minus observed.</td></tr>
+              <tr><td>RMSEP</td><td>Root mean squared error of prediction. RMSEP&sup2; &asymp; SEP&sup2; + bias&sup2;.</td></tr>
+              <tr><td>SEP</td><td>Standard error of prediction: the error spread about the bias, using n &minus; 1.</td></tr>
+              <tr><td>RPIQ</td><td>Interquartile range of the observed values divided by RMSEP. Robust to skewed properties.</td></tr>
+              <tr><td>&rho;<sub>c</sub></td><td>Lin's concordance correlation coefficient: agreement with the 1:1 line.</td></tr>
+              <tr><td>True RMSEP, SEP, RPIQ</td><td>The same values with the reference-lab error removed, when the lab &sigma; is given.</td></tr>
+              <tr><td>s<sub>e</sub></td><td>RMSECV from out-of-fold residuals, the baseline interval width.</td></tr>
+              <tr><td>PICP</td><td>Prediction interval coverage probability: the share of observed values inside their ranges.</td></tr>
+              <tr><td>MPIW</td><td>Mean prediction interval width.</td></tr>
+              <tr><td>PIT</td><td>Probability integral transform. Its histogram should be flat.</td></tr>
+              <tr><td>CRPS</td><td>Continuous ranked probability score. Lower is better.</td></tr>
+              <tr><td>Interval score</td><td>Width plus a penalty for each observation outside its range. Lower is better.</td></tr>
+              <tr><td>Leverage h, h*</td><td>Distance from the calibration spectra, and the outside-domain limit of three times the mean training leverage.</td></tr>
+            </tbody>
+          </table>
+          </div>
+
           <h3 id="ref-formats">Image formats</h3>
           <div class="table-wrap">
           <table>
@@ -1405,6 +1689,11 @@ python paracuda.py</code></pre>
               <tr><td>Resampled cube</td><td>Optional export of the harmonised image or tabular spectra, for verification.</td></tr>
               <tr><td>Unknown predictions</td><td>Workbook of predictions for a table of samples with no measured properties.</td></tr>
               <tr><td>Model Development Flow</td><td>The pipeline diagram, exported at 300 DPI.</td></tr>
+              <tr><td><code>Unc_...</code> sheets</td><td>Added to the Excel report: <code>Unc_FoM</code>, <code>Unc_Coverage</code>, <code>Unc_Train</code>, <code>Unc_CV</code>, <code>Unc_Test</code>, <code>Unc_FK_Budget</code> and <code>Unc_Settings</code>. Batch runs prefix them with the model name.</td></tr>
+              <tr><td><code>Uncertainty</code> sheet</td><td>Added to the unknown-predictions workbook: per-sample ranges, &sigma;, leverage and the outside-domain flag, plus stock columns and a <code>Stock_Summary</code> sheet when stock is on.</td></tr>
+              <tr><td><code>&lt;output&gt;_uncertainty.pdf</code></td><td>Report for an unknown-table prediction.</td></tr>
+              <tr><td><code>&lt;output&gt;_uncertainty.&lt;ext&gt;</code></td><td>Multi-band raster beside an image prediction: leverage, outside-domain mask, lower, upper and &sigma; per method, optional spectral-noise SD and stock bands. Band descriptions name each layer.</td></tr>
+              <tr><td><code>&lt;output&gt;_uncertainty_report.pdf</code></td><td>Uncertainty maps and summaries for an image prediction.</td></tr>
             </tbody>
           </table>
           </div>
@@ -1435,6 +1724,7 @@ python paracuda.py</code></pre>
               <tr><td><code>preprocessing</code>, <code>preprocessing_kwargs</code></td><td>The training preprocessing method and its parameters, including any fitted reference spectrum.</td></tr>
               <tr><td><code>model_type</code>, <code>model_parameters</code></td><td>The model name and its hyperparameters.</td></tr>
               <tr><td><code>selected_property</code></td><td>The property the model predicts.</td></tr>
+              <tr><td><code>uncertainty</code></td><td>The fitted interval model, when the model was trained with uncertainty analysis: leverage space, cross-validated residuals and any bootstrap or quantile-forest members. Absent in older files.</td></tr>
             </tbody>
           </table>
           </div>
@@ -1446,13 +1736,12 @@ python paracuda.py</code></pre>
             <tbody>
               <tr><td><code>preprocessing/</code></td><td>Spectral preprocessing, resampling, sensor presets, compositional transforms, integrity tests.</td></tr>
               <tr><td><code>models/</code></td><td>Model construction, Optuna tuning, batch processing, metrics and plots.</td></tr>
-              <tr><td><code>validation/</code></td><td>Cross-validation strategies and derived metrics.</td></tr>
-              <tr><td><code>utils/</code></td><td>File I/O, the Data Converter, image processing, distribution reports and the Help Assistant.</td></tr>
+              <tr><td><code>validation/</code></td><td>Cross-validation strategies, derived metrics, uncertainty analysis (<code>uncertainty.py</code>) and its figures (<code>uncertainty_plots.py</code>).</td></tr>
+              <tr><td><code>utils/</code></td><td>File I/O, the Data Converter, image processing, distribution reports, the Help Assistant and the shared tooltip texts.</td></tr>
               <tr><td><code>gui/</code></td><td>The Tkinter window, composed from mixins (desktop and Python package).</td></tr>
               <tr><td><code>gui_qt/</code></td><td>The Qt dock panel (QGIS plugin only).</td></tr>
               <tr><td><code>paracuda_theme.py</code></td><td>Shared colour themes.</td></tr>
               <tr><td><code>tools/</code></td><td><code>sync_backend.py</code> and <code>make_zip.py</code> (QGIS plugin repository).</td></tr>
-              <tr><td><code>docs/</code></td><td>This website, published with GitHub Pages.</td></tr>
             </tbody>
           </table>
           </div>
@@ -1521,6 +1810,32 @@ python paracuda.py</code></pre>
           </p>
 <pre><code class="language-bash">pip install "paracuda-ng[fast]"</code></pre>
 
+          <h3 id="ts-no-intervals">Predictions come without ranges</h3>
+          <p>
+            The model was saved without an uncertainty model. The log says so when the model
+            loads, and the status line under Model Management reads <em>Uncertainty model:
+            none</em>. Tick <strong>Estimate prediction uncertainty</strong> in Step 5, pick at
+            least one interval method, run again and save the new model. Also check that
+            <em>Add prediction intervals</em> or <em>Create uncertainty maps</em> is ticked in
+            Step 7.
+          </p>
+
+          <h3 id="ts-coverage">Coverage is well below the confidence level</h3>
+          <p>
+            The ranges are too narrow, which a U-shaped PIT histogram also shows. This often
+            happens when the test set differs from the training data. Compare the methods side
+            by side: conformal prediction guarantees average coverage, and the quantile forest
+            adapts to regions where errors are large. A large share of samples outside the
+            calibration domain means the model is being used beyond what it was trained on.
+          </p>
+
+          <h3 id="ts-model-size">The saved model file is much larger</h3>
+          <p>
+            The bootstrap method stores every refit inside the model file, and the quantile
+            forest stores its trees. Lower <em>Bootstrap refits</em>, or use Leverage,
+            Faber-Kowalski or Conformal, which add almost nothing to the file.
+          </p>
+
           <h3 id="ts-memory">A hyperspectral scene runs out of memory</h3>
           <p>
             Use the chunked prediction path shown in
@@ -1536,7 +1851,7 @@ python paracuda.py</code></pre>
         <section>
           <h2 id="project-status">Project status</h2>
           <p>
-            PARACUDA-NG 1.0.0 is stable and in active development. The desktop application, the
+            PARACUDA-NG 1.0.2 is stable and in active development. The desktop application, the
             Python package and the QGIS plugin are released together and share one scientific
             engine, so a fix in one reaches all three.
           </p>
@@ -1563,7 +1878,27 @@ python paracuda.py</code></pre>
             <li>Five colour themes across all three distributions.</li>
           </ul>
 
-          <h3 id="status-recent">Recently added in 1.0.0</h3>
+          <h3 id="status-next">Coming in the next release</h3>
+          <ul>
+            <li><a href="#uncertainty">Uncertainty analysis</a> in Step 5: leverage,
+              Faber-Kowalski, bootstrap, quantile regression forest and conformal prediction
+              intervals at 90, 95 or 99 percent confidence, with a plain-language
+              <em>How does this work?</em> guide.</li>
+            <li>Bias, RMSEP, SEP, RPIQ and Lin's concordance per set, with an optional
+              reference-lab-error correction, and interval checks (PICP, width, PIT, quantile
+              coverage, CRPS, interval score) in the workbook, the PDF report and the
+              Visualization tab.</li>
+            <li>The interval model is saved with the model, so tabular predictions get
+              per-sample ranges and image predictions get an uncertainty raster with an
+              outside-domain flag. In QGIS the raster is added to the map.</li>
+            <li>Optional soil organic carbon stock with GUM and Monte Carlo uncertainty and an
+              uncertainty budget.</li>
+            <li>Hover tooltips on every button, checkbox, drop-down and field.</li>
+            <li>A wizard step whose controls fit on screen no longer scrolls; the scrollbar
+              appears only when a step is taller than the panel.</li>
+          </ul>
+
+          <h3 id="status-recent">Recently added in 1.0</h3>
           <ul>
             <li>First QGIS plugin release: the full wizard as a native dockable Qt6 panel for
               QGIS 3.30 and QGIS 4.</li>
@@ -1650,7 +1985,7 @@ python paracuda.py</code></pre>
 <footer class="md-footer">
   <div class="md-footer__inner md-grid">
     <div>
-      <p style="margin:0 0 0.3rem"><strong>PARACUDA-NG</strong> 1.0.0, MIT licensed. Copyright <span data-year>2026</span> Sharad Kumar Gupta.</p>
+      <p style="margin:0 0 0.3rem"><strong>PARACUDA-NG</strong> 1.0.2, MIT licensed. Copyright <span data-year>2026</span> Sharad Kumar Gupta.</p>
       <p style="margin:0">PARAmetric CUbe Data Analysis - Next Generation</p>
     </div>
     <div class="md-footer__links">
